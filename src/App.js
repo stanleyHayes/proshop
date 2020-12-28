@@ -1,8 +1,24 @@
+import React from "react";
+import {Switch, Route} from "react-router-dom";
+import HomePage from "./pages/home/home-page";
+import ProductsPage from "./pages/products/products-page";
+import ProductDetailPage from "./pages/products/product-detail";
+
 const App = () => {
     return (
-        <div className="App">
-            <h1>Welcome to ProShop</h1>
-        </div>
+            <Switch>
+                <Route exact={true} path="/">
+                    <HomePage />
+                </Route>
+
+                <Route exact={true} path="/products">
+                    <ProductsPage />
+                </Route>
+
+                <Route exact={true} path="/products/:productID">
+                    <ProductDetailPage />
+                </Route>
+            </Switch>
     );
 }
 
