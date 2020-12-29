@@ -1,15 +1,15 @@
 import {Container, Divider, Grid, makeStyles, Typography} from "@material-ui/core";
 import Layout from "../../components/layout/layout";
-import React from "react";
-import products from "../../products";
+import React, {useEffect, useState} from "react";
 import Product from "../../components/shared/product";
 import {grey} from "@material-ui/core/colors";
+import axios from "axios";
 
 const HomePage = () => {
 
     const useStyles = makeStyles(theme => {
         return {
-            divider : {
+            divider: {
                 marginTop: 32,
                 marginBottom: 32
             },
@@ -22,25 +22,34 @@ const HomePage = () => {
             }
         }
     });
-
     const classes = useStyles();
+    const [products, setProducts] = useState([]);
 
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const {data} = await axios.get(`http://localhost:5000/api/products`);
+            setProducts(data.data);
+        }
+        fetchProducts();
+    }, [products]);
+
+    console.log(products)
     return (
         <Layout>
             <Container className={classes.container}>
                 <Typography className={classes.title} variant="h4">Latest Products</Typography>
-                <Divider className={classes.divider} variant="fullWidth" />
+                <Divider className={classes.divider} variant="fullWidth"/>
                 {products.length ? (
                     <Grid container={true} spacing={4}>
                         {products.map(product => {
                             return (
                                 <Grid key={product._id} item={true} xs={12} md={4} lg={3} xl={3}>
-                                    <Product product={product} />
+                                    <Product product={product}/>
                                 </Grid>
                             )
                         })}
                     </Grid>
-                ): (
+                ) : (
                     <Grid container={true}>
                         <Grid item={true}>
                             <Typography variant="h6" align="center">No Products Available</Typography>

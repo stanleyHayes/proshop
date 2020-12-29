@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "../header";
-import Footer from "../footer";
+import Footer from "../navigation/footer";
 import {makeStyles} from "@material-ui/core";
+import Header from "../navigation/header";
 
 const Layout = ({children}) => {
 

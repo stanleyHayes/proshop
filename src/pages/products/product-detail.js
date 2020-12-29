@@ -54,7 +54,6 @@ const ProductDetailPage = () => {
 
     const classes = useStyles();
 
-
     const {productID} = useParams();
     const product = products.find(product => product._id === productID);
     const [quantity, setQuantity] = useState(0);
@@ -76,7 +75,7 @@ const ProductDetailPage = () => {
                     <CardContent>
                         <Grid container={true} spacing={5}>
                             <Grid item={true} xs={12} md={4} lg={7}>
-                                <Image src={product.image}/>
+                                <Image cover={true} color="red" src={product.image}/>
                             </Grid>
                             <Grid item={true} xl={12} md={8} lg={5}>
                                 <Typography variant="h4" className={classes.productName}>{product.name}</Typography>
