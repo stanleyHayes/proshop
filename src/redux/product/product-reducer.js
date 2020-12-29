@@ -3,7 +3,8 @@ import PRODUCT_ACTION_TYPES from "./product-action-types";
 const INITIAL_STATE = {
     products: [],
     error: null,
-    loading: false
+    loading: false,
+    product: {}
 }
 
 const productReducer = (state = INITIAL_STATE, action) => {
@@ -26,6 +27,29 @@ const productReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 products: [],
+                error: action.payload
+            }
+
+        case PRODUCT_ACTION_TYPES.GET_PRODUCT_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                product: {}
+            }
+
+        case PRODUCT_ACTION_TYPES.GET_PRODUCT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                product: action.payload,
+                error: null
+            }
+
+        case PRODUCT_ACTION_TYPES.GET_PRODUCT_FAIL:
+            return {
+                ...state,
+                loading: false,
+                product: {},
                 error: action.payload
             }
         default:

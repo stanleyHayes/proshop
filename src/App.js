@@ -3,22 +3,25 @@ import {Switch, Route} from "react-router-dom";
 import HomePage from "./pages/home/home-page";
 import ProductsPage from "./pages/products/products-page";
 import ProductDetailPage from "./pages/products/product-detail";
+import ScrollToTop from "./components/shared/scroll-to-top";
 
 const App = () => {
     return (
-            <Switch>
+        <Switch>
+            <ScrollToTop>
                 <Route exact={true} path="/">
-                    <HomePage />
+                    <HomePage/>
                 </Route>
 
                 <Route exact={true} path="/products">
-                    <ProductsPage />
+                    <ProductsPage/>
                 </Route>
 
                 <Route exact={true} path="/products/:productID">
-                    <ProductDetailPage />
+                    <ProductDetailPage/>
                 </Route>
-            </Switch>
+            </ScrollToTop>
+        </Switch>
     );
 }
 
