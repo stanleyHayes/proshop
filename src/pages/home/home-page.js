@@ -1,9 +1,12 @@
-import {Container, Divider, Grid, makeStyles, Typography} from "@material-ui/core";
+import {Container, Divider, Grid, makeStyles, LinearProgress, Box} from "@material-ui/core";
 import Layout from "../../components/layout/layout";
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import Product from "../../components/shared/product";
-import {grey} from "@material-ui/core/colors";
-import axios from "axios";
+import {grey, red} from "@material-ui/core/colors";
+import {useDispatch, useSelector} from "react-redux";
+import {getProducts} from "../../redux/product/product-action-creators";
+import Typography from "@material-ui/core/Typography";
+import {useSnackbar} from "notistack";
 
 const HomePage = () => {
 
@@ -19,42 +22,72 @@ const HomePage = () => {
             },
             container: {
                 paddingTop: 32
+            },
+            errorDivider: {
+                height: 5,
+                backgroundColor: red[900]
+            },
+            error: {
+                color: red[900],
+                fontWeight: 700
             }
         }
     });
     const classes = useStyles();
-    const [products, setProducts] = useState([]);
+    const dispatch = useDispatch();
+    const {products, loading, error} = useSelector(state => state.products);
+    const {enqueueSnackbar} = useSnackbar();
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            const {data} = await axios.get(`http://localhost:5000/api/products`);
-            setProducts(data.data);
-        }
-        fetchProducts();
-    }, [products]);
+        const handleAlert = (status, message) => {
+            switch (status){
+                case 'ERROR':
+                    enqueueSnackbar(message, {
+                        variant: 'error'
+                    });
+                    break;
 
-    console.log(products)
+                case 'SUCCESS':
+                    enqueueSnackbar(message, {
+                        variant: 'success'
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        dispatch(getProducts(handleAlert));
+    }, [dispatch, enqueueSnackbar]);
+
     return (
         <Layout>
             <Container className={classes.container}>
                 <Typography className={classes.title} variant="h4">Latest Products</Typography>
                 <Divider className={classes.divider} variant="fullWidth"/>
-                {products.length ? (
-                    <Grid container={true} spacing={4}>
-                        {products.map(product => {
-                            return (
-                                <Grid key={product._id} item={true} xs={12} md={4} lg={3} xl={3}>
-                                    <Product product={product}/>
-                                </Grid>
-                            )
-                        })}
-                    </Grid>
+                {loading ? <LinearProgress variant="query"/> : error ? (
+                    <Box>
+                        <Divider variant="inset" className={classes.errorDivider} />
+                        <Typography variant="h6" className={classes.error}>{error}</Typography>
+                    </Box>
                 ) : (
-                    <Grid container={true}>
-                        <Grid item={true}>
-                            <Typography variant="h6" align="center">No Products Available</Typography>
+                    products.length ? (
+                        <Grid container={true} spacing={4}>
+                            {products.map(product => {
+                                return (
+                                    <Grid key={product._id} item={true} xs={12} md={4} lg={3} xl={3}>
+                                        <Product product={product}/>
+                                    </Grid>
+                                )
+                            })}
                         </Grid>
-                    </Grid>
+                    ) : (
+                        <Grid container={true}>
+                            <Grid item={true}>
+                                <Typography variant="h6" align="center">No Products Available</Typography>
+                            </Grid>
+                        </Grid>
+                    )
                 )}
             </Container>
         </Layout>

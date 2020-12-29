@@ -31,7 +31,7 @@ const Product = ({product}) => {
         <Card variant="elevation" elevation={1}>
             <CardContent>
                 <Link to={`/products/${product._id}`}>
-                    <CardMedia component="img" src={product.image}/>
+                    <CardMedia component="img" src={product.image || '/images/notfound.jpg'}/>
                 </Link>
                 <CardContent>
                     <Typography variant="overline" className={classes.brand}>

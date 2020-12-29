@@ -7,6 +7,7 @@ import {ThemeProvider} from "@material-ui/styles";
 import {createMuiTheme} from "@material-ui/core";
 import {BrowserRouter} from "react-router-dom";
 import {Provider} from "react-redux";
+import {SnackbarProvider} from "notistack";
 import store from "./redux/store";
 
 const theme = createMuiTheme({
@@ -23,7 +24,12 @@ ReactDOM.render(
         <BrowserRouter>
             <ThemeProvider theme={theme}>
                 <Provider store={store}>
-                    <App/>
+                    <SnackbarProvider anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right'
+                    }}>
+                        <App/>
+                    </SnackbarProvider>
                 </Provider>
             </ThemeProvider>
         </BrowserRouter>
