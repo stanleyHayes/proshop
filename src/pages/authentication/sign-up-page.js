@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {
     CardContent,
     Container,
@@ -12,12 +12,12 @@ import {
     Divider, Button, LinearProgress
 } from "@material-ui/core";
 import {useDispatch, useSelector} from "react-redux";
-import {signIn} from "../../redux/authentication/authentication-action-creators";
+import {signUp} from "../../redux/authentication/authentication-action-creators";
 import {useSnackbar} from "notistack";
 import {grey} from "@material-ui/core/colors";
-import {Link, useLocation, useHistory} from "react-router-dom";
-import validator from "validator";
-const SignInPage = () => {
+import {Link} from "react-router-dom";
+
+const SignUpPage = () => {
 
     const useStyles = makeStyles(theme => {
         return {
@@ -32,7 +32,7 @@ const SignInPage = () => {
             },
             container: {},
             gridContainer: {},
-            signInButton: {
+            signUpButton: {
                 color: "white",
                 paddingBottom: 16,
                 paddingTop: 16,
@@ -81,18 +81,20 @@ const SignInPage = () => {
     const classes = useStyles();
 
     const [user, setUser] = useState({});
-    const {email, password} = user;
+    const {name, email, phone, password} = user;
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [e, setError] = useState({});
     const [visible, setVisible] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
     const dispatch = useDispatch();
-    const history = useHistory();
-    const location = useLocation();
-    const redirect = location.search ? location.search.split('=')[1] : '/';
-    const {loading, error, userProfile} = useSelector(state => state.authentication);
+    const {loading, error} = useSelector(state => state.authentication);
 
     const handleUserChange = e => {
         setUser({...user, [e.target.name]: e.target.value});
+    }
+
+    const handleConfirmPasswordChange = e => {
+        setConfirmPassword(e.target.value);
     }
 
     const handlePasswordVisibility = () => {
@@ -118,28 +120,9 @@ const SignInPage = () => {
         }
     }
 
-    useEffect(() => {
-        if(userProfile){
-            history.push(redirect);
-        }
-    }, [history, redirect, userProfile]);
+    const handleSignUpClicked = e => {
 
-    const handleSignInClicked = e => {
-        e.preventDefault();
-        if(!email){
-            setError({...e, email: 'Email field required'});
-            return ;
-        }else {
-            setError({...e, email: null});
-        }
-
-        if(!validator.isEmail(email)){
-            setError({...e, email: 'Invalid email'});
-            return ;
-        }else {
-            setError({...e, email: null});
-        }
-        dispatch(signIn(user, handleAlert));
+        dispatch(signUp(user, handleAlert))
     }
 
 
@@ -148,7 +131,7 @@ const SignInPage = () => {
             <Container>
                 <Grid container={true} justify="center">
                     <Grid item={true} xs={12} md={6}>
-                        <Card elevation={1}>
+                        <Card elevation={0.5}>
                             {loading ? <LinearProgress variant="query"/> : null}
                             <CardContent>
                                 {error ? (
@@ -164,6 +147,20 @@ const SignInPage = () => {
 
                                 <Divider variant="middle" className={classes.headerDivider}/>
 
+                                <TextField
+                                    placeholder="Enter full name"
+                                    variant="outlined"
+                                    margin="normal"
+                                    name="name"
+                                    type="text"
+                                    label="Name"
+                                    value={name}
+                                    onChange={handleUserChange}
+                                    error={Boolean(e.name)}
+                                    helperText={e.name}
+                                    className={classes.textField}
+                                    fullWidth={true}
+                                />
 
                                 <TextField
                                     placeholder="Enter email"
@@ -172,7 +169,6 @@ const SignInPage = () => {
                                     name="email"
                                     type="email"
                                     label="Email"
-                                    required={true}
                                     value={email}
                                     onChange={handleUserChange}
                                     error={Boolean(e.email)}
@@ -182,9 +178,23 @@ const SignInPage = () => {
                                 />
 
                                 <TextField
+                                    placeholder="Enter phone"
+                                    variant="outlined"
+                                    margin="normal"
+                                    name="phone"
+                                    type="tel"
+                                    label="Phone"
+                                    value={phone}
+                                    onChange={handleUserChange}
+                                    error={Boolean(e.name)}
+                                    helperText={e.name}
+                                    className={classes.textField}
+                                    fullWidth={true}
+                                />
+
+                                <TextField
                                     placeholder="Enter password"
                                     variant="outlined"
-                                    required={true}
                                     margin="normal"
                                     name="password"
                                     type={visible ? 'text' : 'password'}
@@ -210,23 +220,36 @@ const SignInPage = () => {
                                 </Box>
 
 
-                                <Divider variant="fullWidth" className={classes.divider}/>
+                                <TextField
+                                    placeholder="Enter password again"
+                                    variant="outlined"
+                                    margin="normal"
+                                    name="confirmPassword"
+                                    type={visible ? 'text' : 'password'}
+                                    label="Confirm Password"
+                                    value={confirmPassword}
+                                    onChange={handleConfirmPasswordChange}
+                                    error={Boolean(e.confirmPassword)}
+                                    helperText={e.confirmPassword}
+                                    className={classes.textField}
+                                    fullWidth={true}
+                                />
 
+                                <Divider variant="fullWidth" className={classes.divider}/>
                                 <Button
-                                    onClick={handleSignInClicked}
+                                    onClick={handleSignUpClicked}
                                     variant="contained"
                                     disableElevation={true}
                                     fullWidth={true}
-                                    className={classes.signInButton}
+                                    className={classes.signUpButton}
                                     size="large"
                                     disabled={loading}>
-                                    Sign In
+                                    Sign Up
                                 </Button>
 
-                                <Link to={redirect ? `/register?redirect=${redirect}` : '/register'}
-                                      className={classes.noAccountLink}>
+                                <Link to="/login" className={classes.noAccountLink}>
                                     <Button className={classes.noAccountLink} variant="text" fullWidth={true}>
-                                        Don't have an account? Register
+                                        Already have an account? Login
                                     </Button>
                                 </Link>
 
@@ -239,4 +262,4 @@ const SignInPage = () => {
     )
 }
 
-export default SignInPage;
+export default SignUpPage;

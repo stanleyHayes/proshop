@@ -12,6 +12,7 @@ import CartPage from "./pages/cart/cart-page";
 import AccountPage from "./pages/others/account-page";
 import ShippingPage from "./pages/cart/shipping-page";
 import SignInPage from "./pages/authentication/sign-in-page";
+import SignUpPage from "./pages/authentication/sign-up-page";
 
 const App = () => {
     return (
@@ -55,6 +56,10 @@ const App = () => {
 
                 <Route exact={true} path="/login">
                     <SignInPage/>
+                </Route>
+
+                <Route exact={true} path="/register">
+                    <SignUpPage/>
                 </Route>
 
                 <Route exact={true} path="/terms-and-conditions">
