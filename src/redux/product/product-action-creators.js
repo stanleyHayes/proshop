@@ -37,8 +37,8 @@ export const getProducts = (handleAlert) => {
             dispatch(getProductsSuccess(data))
             handleAlert('SUCCESS', message);
         }).catch(error => {
-            dispatch(getProductsFail(error.response.data.error.message));
-            handleAlert('ERROR', error.response.data.error.message);
+            dispatch(getProductsFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
         });
     }
 }
@@ -79,8 +79,8 @@ export const getProduct = (productID, handleAlert) => {
             dispatch(getProductSuccess(data))
             handleAlert('SUCCESS', message);
         }).catch(error => {
-            dispatch(getProductFail(error.response.data.error.message));
-            handleAlert('ERROR', error.response.data.error.message);
+            dispatch(getProductFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
         });
     }
 }

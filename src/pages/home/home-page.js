@@ -25,11 +25,16 @@ const HomePage = () => {
             },
             errorDivider: {
                 height: 5,
-                backgroundColor: red[900]
+                backgroundColor: red[900],
+                marginBottom: 16
             },
             error: {
                 color: red[900],
                 fontWeight: 700
+            },
+            noProductsText: {
+                textTransform: "uppercase",
+                color: grey[600]
             }
         }
     });
@@ -67,7 +72,7 @@ const HomePage = () => {
                 <Divider className={classes.divider} variant="fullWidth"/>
                 {loading ? <LinearProgress variant="query"/> : error ? (
                     <Box>
-                        <Divider variant="inset" className={classes.errorDivider} />
+                        <Divider variant="fullWidth" className={classes.errorDivider} />
                         <Typography variant="h6" className={classes.error}>{error}</Typography>
                     </Box>
                 ) : (
@@ -84,7 +89,7 @@ const HomePage = () => {
                     ) : (
                         <Grid container={true}>
                             <Grid item={true}>
-                                <Typography variant="h6" align="center">No Products Available</Typography>
+                                <Typography className={classes.notProductsText} variant="h6" align="center">No Products Available</Typography>
                             </Grid>
                         </Grid>
                     )

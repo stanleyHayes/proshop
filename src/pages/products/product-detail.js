@@ -21,10 +21,12 @@ import {AddShoppingCart} from "@material-ui/icons";
 import {useSelector, useDispatch} from "react-redux";
 import {getProduct} from "../../redux/product/product-action-creators";
 import {useSnackbar} from "notistack";
-import {grey, red} from "@material-ui/core/colors";
+import {green, grey, red} from "@material-ui/core/colors";
+import AddToCartDialog from "../../components/shared/add-to-cart-dialog";
+import {useHistory} from "react-router-dom";
+import {addToCart} from "../../redux/cart/cart-action-creators";
 
 const ProductDetailPage = () => {
-
     const useStyles = makeStyles(theme => {
         return {
             container: {
@@ -52,7 +54,10 @@ const ProductDetailPage = () => {
             addToCartIcon: {
                 color: "white"
             },
-            textField: {},
+            textField: {
+                backgroundColor: "#f0f2f5",
+                marginBottom: 8
+            },
             title: {
                 textTransform: "uppercase",
                 color: grey[700]
@@ -64,6 +69,16 @@ const ProductDetailPage = () => {
             error: {
                 color: red[900],
                 fontWeight: 700
+            },
+            increaseQuantityButton: {
+                backgroundColor: green[900],
+                color: "white",
+                fontWeight: "bold"
+            },
+            decreaseQuantityButton: {
+                backgroundColor: grey[700],
+                color: "white",
+                fontWeight: "bold"
             }
         }
     });
@@ -71,6 +86,7 @@ const ProductDetailPage = () => {
 
     const {productID} = useParams();
     const [quantity, setQuantity] = useState(0);
+    const [open, setOpen] = useState(false);
     const handleQuantityChange = e => {
         setQuantity(e.target.value);
     }
@@ -78,9 +94,34 @@ const ProductDetailPage = () => {
         setQuantity(quantity => quantity - 1);
     }
     const increaseQuantity = () => {
-        setQuantity(quantity => quantity + 1);
+        setQuantity(quantity => {
+            if (quantity > product.countInStock) {
+                const handleAlert = (status, message) => {
+                    switch (status) {
+                        case 'ERROR':
+                            enqueueSnackbar(message, {
+                                variant: 'error'
+                            });
+                            break;
+
+                        case 'SUCCESS':
+                            enqueueSnackbar(message, {
+                                variant: 'success'
+                            });
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                handleAlert('ERROR', 'Cannot buy more than in stock')
+                return quantity;
+            }
+            return quantity + 1;
+        });
     }
     const dispatch = useDispatch();
+    const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
     const {error, product, loading} = useSelector(state => state.products);
 
@@ -104,17 +145,40 @@ const ProductDetailPage = () => {
             }
         }
         dispatch(getProduct(productID, handleAlert))
-    }, [dispatch, enqueueSnackbar, productID])
+    }, [dispatch, enqueueSnackbar, productID]);
+
+
+    const handleAddToCart = () => {
+        setOpen(true);
+    }
+
+    const handleContinueShopping = () => {
+        setOpen(false);
+        dispatch(addToCart(productID, quantity));
+    }
+
+    const handleGoToCart = () => {
+        setOpen(false);
+        dispatch(addToCart(productID, quantity));
+        history.push(`/cart`);
+    }
+
     return (
         <Layout>
             <Container className={classes.container}>
+                {open ?
+                    <AddToCartDialog
+                        handleGoToCart={handleGoToCart}
+                        open={open}
+                        handleContinueShopping={handleContinueShopping}
+                    /> : null}
                 <Typography className={classes.title} variant="h4">Product Detail</Typography>
                 <Divider className={classes.divider} variant="fullWidth"/>
                 {
                     loading ? (
                         <Box>
                             <LinearProgress variant="query"/>
-                            <Skeleton height={350} animation="wave" variant="rect" />
+                            <Skeleton height={350} animation="wave" variant="rect"/>
                             <Divider className={classes.divider} variant="fullWidth"/>
                             <Skeleton animation="pulse" variant="text"/>
                             <Divider className={classes.divider} variant="fullWidth"/>
@@ -135,7 +199,7 @@ const ProductDetailPage = () => {
                         </Box>
                     ) : error ? (
                         <Box>
-                            <Divider variant="inset" className={classes.errorDivider} />
+                            <Divider variant="inset" className={classes.errorDivider}/>
                             <Typography variant="h6" className={classes.error}>{error}</Typography>
                         </Box>
                     ) : (
@@ -177,37 +241,53 @@ const ProductDetailPage = () => {
                                         <Typography variant="body1">{product.description}</Typography>
                                         <Divider className={classes.divider} variant="fullWidth"/>
                                         <Typography display="inline" variant="h6">Availability: </Typography>
-                                        <Typography display="inline"
-                                                    variant="body1">{product.countInStock > 0 ? `In Stock ${product.countInStock}` : 'Out of Stock'}</Typography>
+                                        <Typography
+                                            display="inline"
+                                            variant="body1">
+                                            {product.countInStock > 0 ? `In Stock (${product.countInStock})` : 'Out of Stock'}
+                                        </Typography>
                                         <Divider className={classes.divider} variant="fullWidth"/>
+
+                                        <Typography variant="body1">Quantity</Typography>
                                         <Grid container={true} spacing={1} alignItems="center">
-                                            <Grid item={true} xs={3} md={2}>
+                                            <Grid item={true} xs={4} md={2}>
                                                 <Button
                                                     disabled={quantity <= 0}
-                                                    variant="outlined"
+                                                    variant="contained"
+                                                    fullWidth={true}
+                                                    disableElevation={true}
+                                                    className={classes.decreaseQuantityButton}
                                                     size="large"
                                                     onClick={decreaseQuantity}>-</Button>
                                             </Grid>
 
-                                            <Grid item={true} xs={3} md={2}>
+                                            <Grid item={true} xs={4} md={2}>
                                                 <TextField
                                                     fullWidth={true}
                                                     className={classes.textField}
                                                     margin="dense"
                                                     variant="outlined"
+                                                    disabled={product.countInStock <= 0}
                                                     value={quantity}
                                                     onChange={handleQuantityChange}
                                                 />
                                             </Grid>
-                                            <Grid item={true} xs={3} md={2}>
-                                                <Button variant="outlined" size="large"
-                                                        onClick={increaseQuantity}>+</Button>
+                                            <Grid item={true} xs={4} md={2}>
+                                                <Button
+                                                    disabled={quantity >= product.countInStock}
+                                                    variant="contained"
+                                                    disableElevation={true}
+                                                    size="large"
+                                                    fullWidth={true}
+                                                    className={classes.increaseQuantityButton}
+                                                    onClick={increaseQuantity}>+</Button>
                                             </Grid>
                                             <Grid item={true} xs={12} md={6}>
                                                 <Button
+                                                    onClick={handleAddToCart}
                                                     fullWidth={true}
                                                     className={classes.addToCartButton}
-                                                    disabled={product.countInStock === 0}
+                                                    disabled={product.countInStock === 0 || quantity === 0}
                                                     variant="contained"
                                                     disableElevation={true}
                                                     size="medium"
