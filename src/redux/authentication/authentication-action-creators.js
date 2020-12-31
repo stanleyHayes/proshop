@@ -103,7 +103,7 @@ const getLoggedInUserFail = error => {
     }
 }
 
-export const getLoggedInUser = (user, token, handleAlert) => {
+export const getLoggedInUser = (token, handleAlert) => {
     return dispatch => {
         dispatch(getLoggedInUserRequest());
         axios({
@@ -162,6 +162,50 @@ export const signOut = (token, handleAlert) => {
             localStorage.removeItem(PRO_SHOP_TOKEN_KEY);
         }).catch(error => {
             dispatch(signOutFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
+
+
+const updateProfileRequest = () => {
+    return {
+        type: AUTH_ACTION_TYPES.UPDATE_PROFILE_REQUEST
+    }
+}
+
+const updateProfileSuccess = (user, token) => {
+    return {
+        type: AUTH_ACTION_TYPES.UPDATE_PROFILE_SUCCESS,
+        payload: {user, token}
+    }
+}
+
+const updateProfileFail = error => {
+    return {
+        type: AUTH_ACTION_TYPES.UPDATE_PROFILE_FAIL,
+        payload: error
+    }
+}
+
+export const updateProfile = (user, token, handleAlert) => {
+    return dispatch => {
+        dispatch(updateProfileRequest());
+        axios({
+            method: 'put',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/auth/me`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: user
+        }).then(response => {
+            const {data, message, token} = response.data;
+            dispatch(updateProfileSuccess(data, token));
+            handleAlert('SUCCESS', message);
+            localStorage.setItem(PRO_SHOP_USER_INFO_KEY, JSON.stringify(data));
+            localStorage.setItem(PRO_SHOP_TOKEN_KEY, JSON.stringify(token));
+        }).catch(error => {
+            dispatch(updateProfileFail(error.response.data.message));
             handleAlert('ERROR', error.response.data.message);
         });
     }

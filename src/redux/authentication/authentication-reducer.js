@@ -80,6 +80,52 @@ const authenticationReducer = (state = INITIAL_STATE, action) => {
                 error: action.payload,
                 userProfile: null
             }
+
+        case AUTH_ACTION_TYPES.UPDATE_PROFILE_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                error: null
+            }
+
+        case AUTH_ACTION_TYPES.UPDATE_PROFILE_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                userProfile: action.payload.user,
+                token: action.payload.token
+            }
+
+        case AUTH_ACTION_TYPES.UPDATE_PROFILE_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
+
+        case AUTH_ACTION_TYPES.SIGN_OUT_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                error: null
+            }
+
+        case AUTH_ACTION_TYPES.SIGN_OUT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                userProfile: null,
+                token: null
+            }
+
+        case AUTH_ACTION_TYPES.SIGN_OUT_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+            }
         default:
             return state;
     }

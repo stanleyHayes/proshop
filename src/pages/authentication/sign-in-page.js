@@ -45,18 +45,23 @@ const SignInPage = () => {
                 }
             },
             divider: {
-                marginTop: 16,
-                marginBottom: 16
+                marginTop: 32,
+                marginBottom: 32
             },
             title: {
-                fontWeight: 300,
+                fontWeight: 600,
                 letterSpacing: 5,
                 textTransform: "uppercase",
-                color: grey[700],
+                color: theme.palette.primary.dark,
                 [theme.breakpoints.down("sm")]: {
-                    fontWeight: 700,
                     fontSize: 32
                 }
+            },
+            header: {
+                fontWeight: 700,
+                letterSpacing: 5,
+                textTransform: "uppercase",
+                color: grey[700]
             },
             tagline: {
                 textTransform: "uppercase",
@@ -155,6 +160,8 @@ const SignInPage = () => {
     return (
         <div className={classes.root}>
             <Container>
+                <Typography className={classes.header} variant="h4">Sign In</Typography>
+                <Divider className={classes.divider} variant="fullWidth"/>
                 <Grid container={true} justify="center">
                     <Grid item={true} xs={12} md={6}>
                         <Card elevation={1}>

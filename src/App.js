@@ -50,7 +50,7 @@ const App = () => {
                     <AccountPage/>
                 </Route>
 
-                <Route exact={true} path="/account">
+                <Route exact={true} path="/shipping">
                     <ShippingPage/>
                 </Route>
 

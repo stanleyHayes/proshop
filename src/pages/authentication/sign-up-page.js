@@ -14,7 +14,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {signUp} from "../../redux/authentication/authentication-action-creators";
 import {useSnackbar} from "notistack";
-import {grey} from "@material-ui/core/colors";
+import {grey, red} from "@material-ui/core/colors";
 import {Link} from "react-router-dom";
 import validator from "validator";
 
@@ -46,18 +46,23 @@ const SignUpPage = () => {
                 }
             },
             divider: {
-                marginTop: 16,
-                marginBottom: 16
+                marginTop: 32,
+                marginBottom: 32
             },
             title: {
-                fontWeight: 300,
+                fontWeight: 700,
                 letterSpacing: 5,
                 textTransform: "uppercase",
-                color: grey[700],
+                color: theme.palette.primary.dark,
                 [theme.breakpoints.down("sm")]: {
-                    fontWeight: 700,
                     fontSize: 32
                 }
+            },
+            header: {
+                fontWeight: 700,
+                letterSpacing: 5,
+                textTransform: "uppercase",
+                color: grey[700]
             },
             tagline: {
                 textTransform: "uppercase",
@@ -75,7 +80,16 @@ const SignUpPage = () => {
                 textAlign: "center",
                 fontWeight: 700,
                 color: theme.palette.primary.main
-            }
+            },
+            errorDivider: {
+                height: 5,
+                backgroundColor: red[900],
+                marginBottom: 16
+            },
+            error: {
+                color: red[900],
+                fontWeight: 700
+            },
         }
     });
 
@@ -193,6 +207,9 @@ const SignUpPage = () => {
     return (
         <div className={classes.root}>
             <Container>
+                <Typography className={classes.header} variant="h4">Sign Up</Typography>
+                <Divider className={classes.divider} variant="fullWidth"/>
+
                 <Grid container={true} justify="center">
                     <Grid item={true} xs={12} md={6}>
                         <Card elevation={0.5}>
@@ -201,7 +218,7 @@ const SignUpPage = () => {
                                 {error ? (
                                     <Box>
                                         <Divider variant="fullWidth" className={classes.errorDivider}/>
-                                        <Typography variant="h6" className={classes.error}>{error}</Typography>
+                                        <Typography variant="body2" align="center" className={classes.error}>{error}</Typography>
                                     </Box>
                                 ) : null}
                                 <Typography className={classes.title} variant="h2" align="center">Pro Shop</Typography>

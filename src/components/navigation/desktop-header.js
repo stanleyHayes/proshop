@@ -1,4 +1,4 @@
-import {Button, Container, Grid, makeStyles, Menu, Toolbar, MenuItem, Paper} from "@material-ui/core";
+import {Button, Container, Grid, makeStyles, Menu, Toolbar, MenuItem, Paper, LinearProgress} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useState} from "react";
 import {
@@ -56,7 +56,7 @@ const DesktopHeader = () => {
     const dispatch = useDispatch();
     const {enqueueSnackbar} = useSnackbar();
     const [open, setOpen] = useState(false);
-    const {userProfile, token} = useSelector(state => state.authentication);
+    const {userProfile, token, loading} = useSelector(state => state.authentication);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -70,27 +70,27 @@ const DesktopHeader = () => {
         setOpen(false);
     };
 
-    const handleAlert = (status, message) => {
-        switch (status) {
-            case 'ERROR':
-                enqueueSnackbar(message, {
-                    variant: 'error'
-                });
-                break;
-
-            case 'SUCCESS':
-                enqueueSnackbar(message, {
-                    variant: 'success'
-                });
-                break;
-
-            default:
-                break;
-        }
-    }
 
     const handleLogout = () => {
-        dispatch(signOut(token, handleAlert))
+        const handleAlert = (status, message) => {
+            switch (status) {
+                case 'ERROR':
+                    enqueueSnackbar(message, {
+                        variant: 'error'
+                    });
+                    break;
+
+                case 'SUCCESS':
+                    enqueueSnackbar(message, {
+                        variant: 'success'
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        dispatch(signOut(token, handleAlert));
     }
 
     return (
@@ -137,6 +137,7 @@ const DesktopHeader = () => {
                         {
                             userProfile ? (
                                 <Grid item={true}>
+                                    {loading && <LinearProgress variant="buffer"/>}
                                     <Button
                                         className={classes.button}
                                         size="medium"
