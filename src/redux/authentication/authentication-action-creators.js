@@ -22,7 +22,7 @@ const signUpFail = error => {
     }
 }
 
-export const signUp = (user, handleAlert) => {
+export const signUp = (user, handleAlert, history) => {
     return dispatch => {
         dispatch(signUpRequest());
         axios({
@@ -120,6 +120,48 @@ export const getLoggedInUser = (user, token, handleAlert) => {
             localStorage.setItem(PRO_SHOP_TOKEN_KEY, JSON.stringify(token));
         }).catch(error => {
             dispatch(getLoggedInUserFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
+
+
+const signOutRequest = () => {
+    return {
+        type: AUTH_ACTION_TYPES.SIGN_OUT_REQUEST
+    }
+}
+
+const signOutSuccess = () => {
+    return {
+        type: AUTH_ACTION_TYPES.SIGN_OUT_SUCCESS,
+    }
+}
+
+const signOutFail = error => {
+    return {
+        type: AUTH_ACTION_TYPES.SIGN_OUT_FAIL,
+        payload: error
+    }
+}
+
+export const signOut = (token, handleAlert) => {
+    return dispatch => {
+        dispatch(signOutRequest());
+        axios({
+            method: 'post',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/auth/logout`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
+            const {message} = response.data;
+            dispatch(signOutSuccess());
+            handleAlert('SUCCESS', message);
+            localStorage.removeItem(PRO_SHOP_USER_INFO_KEY);
+            localStorage.removeItem(PRO_SHOP_TOKEN_KEY);
+        }).catch(error => {
+            dispatch(signOutFail(error.response.data.message));
             handleAlert('ERROR', error.response.data.message);
         });
     }

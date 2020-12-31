@@ -14,7 +14,7 @@ import {
 import {useDispatch, useSelector} from "react-redux";
 import {signIn} from "../../redux/authentication/authentication-action-creators";
 import {useSnackbar} from "notistack";
-import {grey} from "@material-ui/core/colors";
+import {grey, red} from "@material-ui/core/colors";
 import {Link, useLocation, useHistory} from "react-router-dom";
 import validator from "validator";
 const SignInPage = () => {
@@ -74,7 +74,16 @@ const SignInPage = () => {
                 textAlign: "center",
                 fontWeight: 700,
                 color: theme.palette.primary.main
-            }
+            },
+            errorDivider: {
+                height: 5,
+                backgroundColor: red[900],
+                marginBottom: 16
+            },
+            error: {
+                color: red[900],
+                fontWeight: 700
+            },
         }
     });
 
@@ -154,7 +163,7 @@ const SignInPage = () => {
                                 {error ? (
                                     <Box>
                                         <Divider variant="fullWidth" className={classes.errorDivider}/>
-                                        <Typography variant="h6" className={classes.error}>{error}</Typography>
+                                        <Typography align="center" variant="body2" className={classes.error}>{error}</Typography>
                                     </Box>
                                 ) : null}
                                 <Typography className={classes.title} variant="h2" align="center">Pro Shop</Typography>

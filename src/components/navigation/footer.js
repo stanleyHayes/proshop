@@ -7,6 +7,9 @@ const Footer = () => {
             divider : {
                 marginTop: 32,
                 marginBottom: 32
+            },
+            copyright: {
+                paddingBottom: 32
             }
         }
     });
@@ -16,7 +19,7 @@ const Footer = () => {
     return (
         <footer>
             <Divider className={classes.divider} variant="fullWidth" />
-            <Typography variant="body2" align="center">
+            <Typography variant="body2" align="center" className={classes.copyright}>
                 Copyright &copy; ProShop 2020
             </Typography>
         </footer>

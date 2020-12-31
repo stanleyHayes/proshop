@@ -2,7 +2,7 @@ import AUTH_ACTION_TYPES from "./authentication-action-types";
 
 const INITIAL_STATE = {
     token: null,
-    userProfile: {},
+    userProfile: null,
     loading: false,
     error: null
 };
@@ -13,7 +13,8 @@ const authenticationReducer = (state = INITIAL_STATE, action) => {
         case AUTH_ACTION_TYPES.SIGN_UP_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                error: null
             }
 
         case AUTH_ACTION_TYPES.SIGN_UP_SUCCESS:
@@ -30,13 +31,14 @@ const authenticationReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 error: action.payload,
-                userProfile: {}
+                userProfile: null
             }
 
         case AUTH_ACTION_TYPES.SIGN_IN_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                error: null
             }
 
         case AUTH_ACTION_TYPES.SIGN_IN_SUCCESS:
@@ -53,7 +55,7 @@ const authenticationReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 error: action.payload,
-                userProfile: {}
+                userProfile: null
             }
 
         case AUTH_ACTION_TYPES.GET_LOGGED_IN_REQUEST:
@@ -76,7 +78,7 @@ const authenticationReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 error: action.payload,
-                userProfile: {}
+                userProfile: null
             }
         default:
             return state;

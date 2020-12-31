@@ -16,6 +16,7 @@ import {signUp} from "../../redux/authentication/authentication-action-creators"
 import {useSnackbar} from "notistack";
 import {grey} from "@material-ui/core/colors";
 import {Link} from "react-router-dom";
+import validator from "validator";
 
 const SignUpPage = () => {
 
@@ -122,6 +123,69 @@ const SignUpPage = () => {
 
     const handleSignUpClicked = e => {
 
+        if (!name) {
+            setError({...e, name: 'Name field required'});
+            handleAlert('ERROR', 'Name field required');
+            return;
+        } else {
+            setError({...e, name: null});
+        }
+
+        if (!email) {
+            setError({...e, email: 'Email field required'});
+            handleAlert('ERROR', 'Email field required');
+            return;
+        } else {
+            setError({...e, email: null});
+        }
+
+        if (!validator.isEmail(email)) {
+            handleAlert('ERROR', 'Invalid email');
+            setError({...e, email: 'Invalid email'});
+            return;
+        } else {
+            setError({...e, email: null});
+        }
+
+        if (!phone) {
+            setError({...e, phone: 'Phone field required'});
+            handleAlert('ERROR', 'Phone field required');
+            return;
+        } else {
+            setError({...e, phone: null});
+        }
+
+        if (!validator.isMobilePhone(phone)) {
+            setError({...e, phone: 'Invalid phone number'});
+            handleAlert('ERROR', 'Invalid');
+            return;
+        } else {
+            setError({...e, phone: null});
+        }
+
+        if (!password) {
+            setError({...e, password: 'Password field required'});
+            handleAlert('ERROR', 'Password field required');
+            return;
+        } else {
+            setError({...e, password: null});
+        }
+
+        if (!confirmPassword) {
+            setError({...e, confirmPassword: 'Confirm Password field required'});
+            handleAlert('ERROR', 'Confirm password field required');
+            return;
+        } else {
+            setError({...e, confirmPassword: null});
+        }
+
+        if (password !== confirmPassword) {
+            setError({...e, password: 'Password mismatch', confirmPassword: 'Password mismatch'});
+            handleAlert('ERROR', 'Password mismatch');
+            return;
+        } else {
+            setError({...e, password: null, confirmPassword: null});
+        }
         dispatch(signUp(user, handleAlert))
     }
 
@@ -155,6 +219,7 @@ const SignUpPage = () => {
                                     type="text"
                                     label="Name"
                                     value={name}
+                                    required={true}
                                     onChange={handleUserChange}
                                     error={Boolean(e.name)}
                                     helperText={e.name}
@@ -170,6 +235,7 @@ const SignUpPage = () => {
                                     type="email"
                                     label="Email"
                                     value={email}
+                                    required={true}
                                     onChange={handleUserChange}
                                     error={Boolean(e.email)}
                                     helperText={e.email}
@@ -182,12 +248,13 @@ const SignUpPage = () => {
                                     variant="outlined"
                                     margin="normal"
                                     name="phone"
+                                    required={true}
                                     type="tel"
                                     label="Phone"
                                     value={phone}
                                     onChange={handleUserChange}
-                                    error={Boolean(e.name)}
-                                    helperText={e.name}
+                                    error={Boolean(e.phone)}
+                                    helperText={e.phone}
                                     className={classes.textField}
                                     fullWidth={true}
                                 />
@@ -199,6 +266,7 @@ const SignUpPage = () => {
                                     name="password"
                                     type={visible ? 'text' : 'password'}
                                     label="Password"
+                                    required={true}
                                     value={password}
                                     onChange={handleUserChange}
                                     error={Boolean(e.password)}
@@ -215,8 +283,11 @@ const SignUpPage = () => {
                                         onChange={handlePasswordVisibility}
                                         value={visible}
                                     />
-                                    <Typography variant="body2"
-                                                display="inline">{visible ? 'Hide Password' : 'Show Password'}</Typography>
+                                    <Typography
+                                        variant="body2"
+                                        display="inline">
+                                        {visible ? 'Hide Password' : 'Show Password'}
+                                    </Typography>
                                 </Box>
 
 
@@ -229,6 +300,7 @@ const SignUpPage = () => {
                                     label="Confirm Password"
                                     value={confirmPassword}
                                     onChange={handleConfirmPasswordChange}
+                                    required={true}
                                     error={Boolean(e.confirmPassword)}
                                     helperText={e.confirmPassword}
                                     className={classes.textField}

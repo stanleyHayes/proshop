@@ -12,10 +12,10 @@ const Product = ({product}) => {
             name: {},
             link: {
                 textDecoration: "none",
-                color: grey[600]
+                color: grey[900]
             },
             price: {
-                color: grey[600]
+                color: grey[700]
             },
             brand: {
                 fontWeight: 800,
@@ -36,7 +36,7 @@ const Product = ({product}) => {
     const classes = useStyles();
 
     return (
-        <Card variant="elevation" elevation={0.5}>
+        <Card variant="elevation" elevation={1}>
             <Link to={`/products/${product._id}`}>
                 <CardMedia component="img" src={product.image || '/images/notfound.jpg'}/>
             </Link>
@@ -59,7 +59,7 @@ const Product = ({product}) => {
                         ( {product.numReviews} Reviews)
                     </Typography>
                 </Box>
-                <Typography variant="h5">${product.price}</Typography>
+                <Typography variant="h5" className={classes.price}>${product.price}</Typography>
                 <Divider variant="fullWidth" className={classes.divider}/>
                 <Typography
                     variant="overline"
