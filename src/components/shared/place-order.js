@@ -1,8 +1,20 @@
 import React from "react";
-import {Avatar, Button, Divider, Grid, makeStyles, Typography, Card, Box} from "@material-ui/core";
-import {grey} from "@material-ui/core/colors";
-import {useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import {
+    Avatar,
+    Button,
+    Divider,
+    Grid,
+    makeStyles,
+    Typography,
+    Card,
+    Box,
+    LinearProgress
+} from "@material-ui/core";
+import {grey, red} from "@material-ui/core/colors";
+import {useDispatch, useSelector} from "react-redux";
+import {Link, useHistory} from "react-router-dom";
+import {createOrder} from "../../redux/orders/order-action-creators";
+import {useSnackbar} from "notistack";
 
 const PlaceOrder = ({handlePreviousClicked}) => {
 
@@ -77,14 +89,27 @@ const PlaceOrder = ({handlePreviousClicked}) => {
                     backgroundColor: theme.palette.primary.dark,
                     transition: 'all 300ms 50ms ease-in-out'
                 }
-            }, summaryCard: {
+            },
+            summaryCard: {
                 backgroundColor: "#f0f2f5"
-            }
+            },
+            errorDivider: {
+                height: 5,
+                backgroundColor: red[900],
+                marginBottom: 16
+            },
+            error: {
+                color: red[900],
+                fontWeight: 700
+            },
         }
     });
     const classes = useStyles();
-
-
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const {enqueueSnackbar} = useSnackbar();
+    const {token} = useSelector(state => state.authentication);
+    const {loading, error} = useSelector(state => state.orders);
     const getDisplayPaymentMethod = code => {
         switch (code) {
             case 'MOMO':
@@ -99,11 +124,16 @@ const PlaceOrder = ({handlePreviousClicked}) => {
                 return 'MOMO';
         }
     }
-    let {shippingAddress, paymentMethod, items, itemsPrice, shippingPrice, taxPrice, totalPrice} = useSelector(state => state.cart);
 
-    const handlePlaceOrderClicked = e => {
-
-    }
+    let {
+        shippingAddress,
+        paymentMethod,
+        items,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice
+    } = useSelector(state => state.cart);
 
     const addDecimal = price => {
         return (Math.round(price * 100) / 100).toFixed(2);
@@ -114,189 +144,233 @@ const PlaceOrder = ({handlePreviousClicked}) => {
     taxPrice = Number((0.15 * itemsPrice).toFixed(2))
     totalPrice = Number(itemsPrice) + Number(shippingPrice) + taxPrice;
 
+    const handlePlaceOrderClicked = e => {
+        e.preventDefault();
+        const handleAlert = (status, message) => {
+            switch (status) {
+                case 'ERROR':
+                    enqueueSnackbar(message, {
+                        variant: 'error'
+                    });
+                    break;
+
+                case 'SUCCESS':
+                    enqueueSnackbar(message, {
+                        variant: 'success'
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        dispatch(createOrder({
+            shippingAddress,
+            paymentMethod,
+            items,
+            itemsPrice,
+            shippingPrice,
+            taxPrice,
+            totalPrice
+        }, token, handleAlert, history));
+    }
+
     return (
-        <Grid container={true} spacing={5}>
-            <Grid item={true} xs={12} md={8}>
-                <Grid container={true}>
-                    <Grid item={true} xs={12}>
-                        <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>Shipping</Typography>
-                        <Typography display="inline" variant="body1" className={classes.label}>Address: </Typography>
-                        <Typography
-                            display="inline"
-                            variant="body1">
-                            {shippingAddress.address}, {shippingAddress.city}, {shippingAddress.postalCode}, {shippingAddress.country}
-                        </Typography>
+        <Box>
+            {loading && <LinearProgress variant="query"/>}
+            {error ? (
+                <Grid item={12}>
+                    <Box>
+                        <Divider variant="fullWidth" className={classes.errorDivider}/>
+                        <Typography variant="body2" className={classes.error}>{error}</Typography>
+                    </Box>
+                </Grid>
+            ) : null}
 
-                        <Divider variant="fullWidth" className={classes.divider}/>
+            <Grid container={true} spacing={5}>
+                <Grid item={true} xs={12} md={8}>
+                    <Grid container={true}>
+                        <Grid item={true} xs={12}>
+                            <Typography gutterBottom={true} variant="h6"
+                                        className={classes.subtitle}>Shipping</Typography>
+                            <Typography display="inline" variant="body1"
+                                        className={classes.label}>Address: </Typography>
+                            <Typography
+                                display="inline"
+                                variant="body1">
+                                {shippingAddress.address}, {shippingAddress.city}, {shippingAddress.postalCode}, {shippingAddress.country}
+                            </Typography>
 
-                        <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>payment
-                            method</Typography>
+                            <Divider variant="fullWidth" className={classes.divider}/>
 
-                        <Typography display="inline" variant="body1" className={classes.label}>Method: </Typography>
-                        <Typography
-                            display="inline"
-                            variant="body1">
-                            {getDisplayPaymentMethod(paymentMethod)}
-                        </Typography>
+                            <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>payment
+                                method</Typography>
 
-                        <Divider variant="fullWidth" className={classes.divider}/>
+                            <Typography display="inline" variant="body1" className={classes.label}>Method: </Typography>
+                            <Typography
+                                display="inline"
+                                variant="body1">
+                                {getDisplayPaymentMethod(paymentMethod)}
+                            </Typography>
 
-                        <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>order
-                            items</Typography>
-                        <Grid container={true}>
-                            {
-                                items.map(item => {
-                                    return (
-                                        <Grid alignItems="center" spacing={1} key={item.product} container={true}
-                                              item={true}>
-                                            <Grid item={true} xs={2}>
-                                                <Avatar variant="rounded" src={item.image} className={classes.avatar}/>
+                            <Divider variant="fullWidth" className={classes.divider}/>
+
+                            <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>order
+                                items</Typography>
+                            <Grid container={true}>
+                                {
+                                    items.map(item => {
+                                        return (
+                                            <Grid alignItems="center" spacing={1} key={item.product} container={true}
+                                                  item={true}>
+                                                <Grid item={true} xs={2}>
+                                                    <Avatar variant="rounded" src={item.image}
+                                                            className={classes.avatar}/>
+                                                </Grid>
+                                                <Grid item={true} xs={6}>
+                                                    <Link to={`/products/${item.product}`} className={classes.link}>
+                                                        <Typography variant="body2">{item.name}</Typography>
+                                                    </Link>
+                                                </Grid>
+                                                <Grid item={true} xs={4}>
+                                                    <Typography variant="body2" display="inline"
+                                                                className={classes.price}>{item.quantity}</Typography>
+                                                    <Typography variant="body2" display="inline"
+                                                                className={classes.price}> x </Typography>
+                                                    <Typography variant="body2" display="inline"
+                                                                className={classes.price}>${item.price}</Typography>
+                                                    <Typography variant="body2" display="inline"
+                                                                className={classes.price}> = </Typography>
+                                                    <Typography variant="body2" display="inline"
+                                                                className={classes.price}>${(item.quantity * item.price).toFixed(2)}</Typography>
+                                                </Grid>
+
+                                                <Grid item={true} xs={12}>
+                                                    <Divider className={classes.summaryDivider} variant="fullWidth"/>
+                                                </Grid>
                                             </Grid>
-                                            <Grid item={true} xs={6}>
-                                                <Link to={`/products/${item.product}`} className={classes.link}>
-                                                    <Typography variant="body2">{item.name}</Typography>
-                                                </Link>
-                                            </Grid>
-                                            <Grid item={true} xs={4}>
-                                                <Typography variant="body2" display="inline"
-                                                            className={classes.price}>{item.quantity}</Typography>
-                                                <Typography variant="body2" display="inline"
-                                                            className={classes.price}> x </Typography>
-                                                <Typography variant="body2" display="inline"
-                                                            className={classes.price}>${item.price}</Typography>
-                                                <Typography variant="body2" display="inline"
-                                                            className={classes.price}> = </Typography>
-                                                <Typography variant="body2" display="inline"
-                                                            className={classes.price}>${(item.quantity * item.price).toFixed(2)}</Typography>
-                                            </Grid>
-
-                                            <Grid item={true} xs={12}>
-                                                <Divider className={classes.summaryDivider} variant="fullWidth"/>
-                                            </Grid>
-                                        </Grid>
-                                    )
-                                })
-                            }
+                                        )
+                                    })
+                                }
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Grid item={true}>
-                        <Grid container={true}>
-                            <Grid item={true}>
-                                <Button
-                                    onClick={handlePreviousClicked}
-                                    variant="contained"
-                                    disableElevation={true}
-                                    fullWidth={true}
-                                    className={classes.signUpButton}
-                                    size="large">
-                                    Back to Payment Method
-                                </Button>
+                        <Grid item={true}>
+                            <Grid container={true}>
+                                <Grid item={true}>
+                                    <Button
+                                        onClick={handlePreviousClicked}
+                                        variant="contained"
+                                        disableElevation={true}
+                                        fullWidth={true}
+                                        className={classes.signUpButton}
+                                        size="large">
+                                        Back to Payment Method
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
+                <Grid item={true} xs={12} md={4}>
+                    <Card className={classes.summaryCard} variant="outlined">
+                        <Box className={classes.box}>
+                            <Typography variant="h6" className={classes.subtitle}>Order Summary</Typography>
+                        </Box>
+                        <Divider className={classes.summaryDivider}/>
+                        <Grid container={true} alignItems="center">
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        Items
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        ${itemsPrice}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item={true} xs={12}>
+                                <Divider className={classes.summaryDivider} variant="fullWidth"/>
+                            </Grid>
+
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        Shipping
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        ${shippingPrice}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+
+                            <Grid item={true} xs={12}>
+                                <Divider className={classes.summaryDivider} variant="fullWidth"/>
+                            </Grid>
+
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        Tax
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        ${taxPrice}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+
+                            <Grid item={true} xs={12}>
+                                <Divider className={classes.summaryDivider} variant="fullWidth"/>
+                            </Grid>
+
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        Total
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                            <Grid item={true} xs={6}>
+                                <Box className={classes.box}>
+                                    <Typography variant="body2" className={classes.summaryLabel}>
+                                        ${totalPrice}
+                                    </Typography>
+                                </Box>
+                            </Grid>
+
+                            <Grid item={true} xs={12}>
+                                <Divider className={classes.summaryDivider} variant="fullWidth"/>
+                            </Grid>
+
+                            <Grid item={true} xs={12}>
+                                <Box className={classes.box}>
+                                    <Button
+                                        onClick={handlePlaceOrderClicked}
+                                        variant="contained"
+                                        disableElevation={true}
+                                        fullWidth={true}
+                                        className={classes.placeOrderButton}
+                                        size="large">
+                                        Place Order
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Card>
+                </Grid>
             </Grid>
-            <Grid item={true} xs={12} md={4}>
-                <Card className={classes.summaryCard} variant="outlined">
-                    <Box className={classes.box}>
-                        <Typography variant="h6" className={classes.subtitle}>Order Summary</Typography>
-                    </Box>
-                    <Divider className={classes.summaryDivider}/>
-                    <Grid container={true} alignItems="center">
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    Items
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    ${itemsPrice}
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item={true} xs={12}>
-                            <Divider className={classes.summaryDivider} variant="fullWidth"/>
-                        </Grid>
-
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    Shipping
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    ${shippingPrice}
-                                </Typography>
-                            </Box>
-                        </Grid>
-
-                        <Grid item={true} xs={12}>
-                            <Divider className={classes.summaryDivider} variant="fullWidth"/>
-                        </Grid>
-
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    Tax
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    ${taxPrice}
-                                </Typography>
-                            </Box>
-                        </Grid>
-
-                        <Grid item={true} xs={12}>
-                            <Divider className={classes.summaryDivider} variant="fullWidth"/>
-                        </Grid>
-
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    Total
-                                </Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item={true} xs={6}>
-                            <Box className={classes.box}>
-                                <Typography variant="body2" className={classes.summaryLabel}>
-                                    ${totalPrice}
-                                </Typography>
-                            </Box>
-                        </Grid>
-
-                        <Grid item={true} xs={12}>
-                            <Divider className={classes.summaryDivider} variant="fullWidth"/>
-                        </Grid>
-
-                        <Grid item={true} xs={12}>
-                            <Box className={classes.box}>
-                                <Button
-                                    onClick={handlePlaceOrderClicked}
-                                    variant="contained"
-                                    disableElevation={true}
-                                    fullWidth={true}
-                                    className={classes.placeOrderButton}
-                                    size="medium">
-                                    Place Order
-                                </Button>
-                            </Box>
-                        </Grid>
-
-                    </Grid>
-                </Card>
-            </Grid>
-        </Grid>
-
+        </Box>
     )
 }
 
