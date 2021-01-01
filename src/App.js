@@ -13,6 +13,8 @@ import AccountPage from "./pages/others/account-page";
 import ShippingPage from "./pages/cart/shipping-page";
 import SignInPage from "./pages/authentication/sign-in-page";
 import SignUpPage from "./pages/authentication/sign-up-page";
+import PaymentPage from "./pages/cart/payment-page";
+import CheckoutPage from "./pages/cart/checkout-page";
 
 const App = () => {
     return (
@@ -50,8 +52,8 @@ const App = () => {
                     <AccountPage/>
                 </Route>
 
-                <Route exact={true} path="/shipping">
-                    <ShippingPage/>
+                <Route exact={true} path="/checkout">
+                    <CheckoutPage/>
                 </Route>
 
                 <Route exact={true} path="/login">
@@ -60,6 +62,10 @@ const App = () => {
 
                 <Route exact={true} path="/register">
                     <SignUpPage/>
+                </Route>
+
+                <Route exact={true} path="/payment">
+                    <PaymentPage/>
                 </Route>
 
                 <Route exact={true} path="/terms-and-conditions">

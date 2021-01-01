@@ -1,7 +1,13 @@
 import CART_ACTION_TYPES from "./cart-action-types";
 
 const INITIAL_STATE = {
-    items: []
+    items: [],
+    shippingAddress: {},
+    paymentMethod: "",
+    itemsPrice: 0,
+    taxPrice: 0,
+    shippingPrice: 0,
+    totalPrice: 0
 };
 
 const cartReducer = (state = INITIAL_STATE, action) => {
@@ -28,6 +34,18 @@ const cartReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 items: state.items.filter(item => item.product !== action.payload)
+            };
+
+        case CART_ACTION_TYPES.CART_SAVE_SHIPPING_ADDRESS:
+            return {
+                ...state,
+                shippingAddress: action.payload
+            };
+
+        case CART_ACTION_TYPES.CART_SAVE_PAYMENT_METHOD:
+            return {
+                ...state,
+                paymentMethod: action.payload
             };
         default:
             return state;

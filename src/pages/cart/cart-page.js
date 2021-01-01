@@ -101,7 +101,7 @@ const CartPage = () => {
     const {items} = useSelector(state => state.cart);
 
     const handleCheckoutClicked = () => {
-        history.push(`/login?redirect=shipping`);
+        history.push(`/login?redirect=checkout`);
     }
 
     const handleRemoveFromCartClicked = productID => {
@@ -149,9 +149,9 @@ const CartPage = () => {
                                 </TableHead>
                                 <TableBody>
                                     {
-                                        items.map(item => {
+                                        items.map((item, index) => {
                                             return (
-                                                <TableRow hover={true}>
+                                                <TableRow key={index} hover={true}>
                                                     <TableCell>
                                                         <Avatar
                                                             className={classes.productImage}

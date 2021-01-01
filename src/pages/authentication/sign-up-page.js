@@ -203,7 +203,6 @@ const SignUpPage = () => {
         dispatch(signUp(user, handleAlert))
     }
 
-
     return (
         <div className={classes.root}>
             <Container>
