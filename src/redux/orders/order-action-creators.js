@@ -7,7 +7,6 @@ const createOrderRequest = () => {
         type: ORDER_ACTION_TYPES.CREATE_ORDER_REQUEST
     }
 }
-
 const createOrderSuccess = order => {
     return {
         type: ORDER_ACTION_TYPES.CREATE_ORDER_SUCCESS,
@@ -20,8 +19,6 @@ const createOrderFail = error => {
         payload: error
     }
 }
-
-
 export const createOrder = (order, token, handleAlert, history) => {
     return dispatch => {
         dispatch(createOrderRequest());
@@ -39,6 +36,44 @@ export const createOrder = (order, token, handleAlert, history) => {
             history.push(`/orders/${data._id}`);
         }).catch(error => {
             dispatch(createOrderFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
+
+
+const getOrderRequest = () => {
+    return {
+        type: ORDER_ACTION_TYPES.GET_ORDER_REQUEST
+    }
+}
+const getOrderSuccess = order => {
+    return {
+        type: ORDER_ACTION_TYPES.GET_ORDER_SUCCESS,
+        payload: order
+    }
+}
+const getOrderFail = error => {
+    return {
+        type: ORDER_ACTION_TYPES.GET_ORDER_FAIL,
+        payload: error
+    }
+}
+export const getOrder = (orderID, token, handleAlert) => {
+    return dispatch => {
+        dispatch(getOrderRequest());
+        axios({
+            method: 'get',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/orders/${orderID}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
+            const {data, message} = response.data;
+            dispatch(getOrderSuccess(data));
+            handleAlert('SUCCESS', message);
+        }).catch(error => {
+            dispatch(getOrderFail(error.response.data.message));
             handleAlert('ERROR', error.response.data.message);
         });
     }

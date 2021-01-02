@@ -15,6 +15,8 @@ import SignInPage from "./pages/authentication/sign-in-page";
 import SignUpPage from "./pages/authentication/sign-up-page";
 import PaymentPage from "./pages/cart/payment-page";
 import CheckoutPage from "./pages/cart/checkout-page";
+import OrderDetailPage from "./pages/orders/order-detail-page";
+import OrdersPage from "./pages/orders/orders-page";
 
 const App = () => {
     return (
@@ -70,6 +72,14 @@ const App = () => {
 
                 <Route exact={true} path="/terms-and-conditions">
                     <TermsAndConditionsPage/>
+                </Route>
+
+                <Route exact={true} path="/orders/:orderID">
+                    <OrderDetailPage/>
+                </Route>
+
+                <Route exact={true} path="/orders">
+                    <OrdersPage/>
                 </Route>
             </ScrollToTop>
         </Switch>
