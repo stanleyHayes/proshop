@@ -3,7 +3,7 @@ import Layout from "../../components/layout/layout";
 import {Container, Divider, makeStyles, Typography} from "@material-ui/core";
 import {grey} from "@material-ui/core/colors";
 
-const ProductsPage = () => {
+const UsersPage = () => {
     const useStyles = makeStyles(theme => {
         return {
             container: {
@@ -25,11 +25,11 @@ const ProductsPage = () => {
     return (
         <Layout>
             <Container className={classes.container}>
-                <Typography className={classes.title} variant="h4" >Products</Typography>
+                <Typography className={classes.title} variant="h4" >Users</Typography>
                 <Divider className={classes.divider} variant="fullWidth"/>
             </Container>
         </Layout>
     )
 }
 
-export default ProductsPage;
+export default UsersPage;

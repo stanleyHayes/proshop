@@ -18,8 +18,8 @@ const Product = ({product}) => {
                 color: grey[700]
             },
             brand: {
-                fontWeight: 800,
-                color: grey[600],
+                fontWeight: 500,
+                color: grey[700],
                 textTransform: "uppercase"
             },
             status: {
@@ -29,6 +29,10 @@ const Product = ({product}) => {
             divider: {
                 marginTop: 16,
                 marginBottom: 16
+            },
+            box: {
+                display: 'grid',
+                justifyContent: 'center'
             }
         }
     });
@@ -41,16 +45,16 @@ const Product = ({product}) => {
                 <CardMedia component="img" src={product.image || '/images/notfound.jpg'}/>
             </Link>
             <CardContent>
-                <Typography variant="overline" className={classes.brand}>
-                    {product.brand} | {product.category}
+                <Typography align="center" display="block" variant="overline" className={classes.brand}>
+                    {product.brand} | {product.category} | {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
                 </Typography>
-                <Typography variant="h6">
+                <Typography align="center" variant="h6">
                     <Link className={classes.link} to={`/products/${product._id}`}>
                         {product.name}
                     </Link>
                 </Typography>
 
-                <Box>
+                <Box className={classes.box}>
                     <Rating value={product.rating} readOnly={true} precision={0.5} size="small" max={5}/>
                     <Typography
                         className={classes.brand}
@@ -59,13 +63,7 @@ const Product = ({product}) => {
                         ( {product.numReviews} Reviews)
                     </Typography>
                 </Box>
-                <Typography variant="h5" className={classes.price}>${product.price}</Typography>
-                <Divider variant="fullWidth" className={classes.divider}/>
-                <Typography
-                    variant="overline"
-                    className={classes.status}>
-                    {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
-                </Typography>
+                <Typography align="center" variant="h5" className={classes.price}>${product.price}</Typography>
             </CardContent>
         </Card>
     )

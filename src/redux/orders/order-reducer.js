@@ -98,6 +98,56 @@ const orderReducer = (state = INITIAL_STATE, action) => {
                 orderError: action.payload,
                 orders: []
             }
+
+
+        case ORDER_ACTION_TYPES.UPDATE_ORDER_REQUEST:
+            return {
+                ...state,
+                ordersLoading: true
+            }
+
+        case ORDER_ACTION_TYPES.UPDATE_ORDER_SUCCESS:
+            return {
+                ...state,
+                ordersLoading: false,
+                orders: [...state.orders.map(order => {
+                    if(order._id === action.payload._id){
+                        return action.payload
+                    }
+                    return order;
+                })],
+                orderError: null
+            }
+
+        case ORDER_ACTION_TYPES.UPDATE_ORDER_FAIL:
+            return {
+                ...state,
+                ordersLoading: false,
+                orderError: action.payload
+            }
+
+
+        case ORDER_ACTION_TYPES.DELETE_ORDER_REQUEST:
+            return {
+                ...state,
+                ordersLoading: true
+            }
+
+        case ORDER_ACTION_TYPES.DELETE_ORDER_SUCCESS:
+            return {
+                ...state,
+                ordersLoading: false,
+                orders: [...state.orders.filter(order => order._id !== action.payload._id)],
+                orderError: null
+            }
+
+        case ORDER_ACTION_TYPES.DELETE_ORDER_FAIL:
+            return {
+                ...state,
+                ordersLoading: false,
+                orderError: action.payload
+            }
+
         default:
             return state;
     }

@@ -95,7 +95,7 @@ const ProductDetailPage = () => {
     }
     const increaseQuantity = () => {
         setQuantity(quantity => {
-            if (quantity > product.countInStock) {
+            if (quantity > productDetail.countInStock) {
                 const handleAlert = (status, message) => {
                     switch (status) {
                         case 'ERROR':
@@ -123,7 +123,7 @@ const ProductDetailPage = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const {enqueueSnackbar} = useSnackbar();
-    const {error, product, loading} = useSelector(state => state.products);
+    const {error, productDetail, loading} = useSelector(state => state.products);
 
     useEffect(() => {
         const handleAlert = (status, message) => {
@@ -212,17 +212,17 @@ const ProductDetailPage = () => {
                                             placeholder={'/images/notfound.jpg'}
                                             color="red"
                                             cover={true}
-                                            src={product.image || '/images/notfound.jpg'}
+                                            src={productDetail.image || '/images/notfound.jpg'}
                                         />
                                     </Grid>
                                     <Grid item={true} xl={12} md={8} lg={5}>
                                         <Typography
                                             variant="h4"
-                                            className={classes.productName}>{product.name}</Typography>
+                                            className={classes.productName}>{productDetail.name}</Typography>
                                         <Divider className={classes.divider} variant="fullWidth"/>
                                         <Box>
                                             <Rating
-                                                value={product.rating}
+                                                value={productDetail.rating}
                                                 readOnly={true}
                                                 precision={0.5}
                                                 size="small"
@@ -232,19 +232,19 @@ const ProductDetailPage = () => {
                                                 className={classes.reviews}
                                                 display="inline"
                                                 variant="body2">
-                                                ({product.numReviews} Customer Reviews)
+                                                ({productDetail.numReviews} Customer Reviews)
                                             </Typography>
                                         </Box>
                                         <Divider className={classes.divider} variant="fullWidth"/>
-                                        <Typography variant="h4">${product.price}</Typography>
+                                        <Typography variant="h4">${productDetail.price}</Typography>
                                         <Divider className={classes.divider} variant="fullWidth"/>
-                                        <Typography variant="body1">{product.description}</Typography>
+                                        <Typography variant="body1">{productDetail.description}</Typography>
                                         <Divider className={classes.divider} variant="fullWidth"/>
                                         <Typography display="inline" variant="h6">Availability: </Typography>
                                         <Typography
                                             display="inline"
                                             variant="body1">
-                                            {product.countInStock > 0 ? `In Stock (${product.countInStock})` : 'Out of Stock'}
+                                            {productDetail.countInStock > 0 ? `In Stock (${productDetail.countInStock})` : 'Out of Stock'}
                                         </Typography>
                                         <Divider className={classes.divider} variant="fullWidth"/>
 
@@ -267,14 +267,14 @@ const ProductDetailPage = () => {
                                                     className={classes.textField}
                                                     margin="dense"
                                                     variant="outlined"
-                                                    disabled={product.countInStock <= 0}
+                                                    disabled={productDetail.countInStock <= 0}
                                                     value={quantity}
                                                     onChange={handleQuantityChange}
                                                 />
                                             </Grid>
                                             <Grid item={true} xs={4} md={2}>
                                                 <Button
-                                                    disabled={quantity >= product.countInStock}
+                                                    disabled={quantity >= productDetail.countInStock}
                                                     variant="contained"
                                                     disableElevation={true}
                                                     size="large"
@@ -287,7 +287,7 @@ const ProductDetailPage = () => {
                                                     onClick={handleAddToCart}
                                                     fullWidth={true}
                                                     className={classes.addToCartButton}
-                                                    disabled={product.countInStock === 0 || quantity === 0}
+                                                    disabled={productDetail.countInStock === 0 || quantity === 0}
                                                     variant="contained"
                                                     disableElevation={true}
                                                     size="medium"
@@ -302,12 +302,12 @@ const ProductDetailPage = () => {
                                             <Typography
                                                 display="inline"
                                                 gutterBottom={true}
-                                                variant="body1">{product.category}</Typography>
+                                                variant="body1">{productDetail.category}</Typography>
                                         </Box>
                                         <Box>
                                             <Typography display="inline" variant="h6">Brand: </Typography>
                                             <Typography display="inline" gutterBottom={true}
-                                                        variant="body1">{product.brand}</Typography>
+                                                        variant="body1">{productDetail.brand}</Typography>
                                         </Box>
                                     </Grid>
                                 </Grid>

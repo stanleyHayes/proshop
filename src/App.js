@@ -10,13 +10,14 @@ import PrivacyPolicyPage from "./pages/others/privacy-policy-page";
 import TermsAndConditionsPage from "./pages/others/terms-and-conditions-page";
 import CartPage from "./pages/cart/cart-page";
 import AccountPage from "./pages/others/account-page";
-import ShippingPage from "./pages/cart/shipping-page";
 import SignInPage from "./pages/authentication/sign-in-page";
 import SignUpPage from "./pages/authentication/sign-up-page";
 import PaymentPage from "./pages/cart/payment-page";
 import CheckoutPage from "./pages/cart/checkout-page";
 import OrderDetailPage from "./pages/orders/order-detail-page";
 import OrdersPage from "./pages/orders/orders-page";
+import UsersPage from "./pages/users/users-page";
+import UserDetailPage from "./pages/users/user-detail-page";
 
 const App = () => {
     return (
@@ -80,6 +81,14 @@ const App = () => {
 
                 <Route exact={true} path="/orders">
                     <OrdersPage/>
+                </Route>
+
+                <Route exact={true} path="/users/:userID">
+                    <UserDetailPage/>
+                </Route>
+
+                <Route exact={true} path="/users">
+                    <UsersPage/>
                 </Route>
             </ScrollToTop>
         </Switch>

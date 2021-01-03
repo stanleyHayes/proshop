@@ -152,3 +152,78 @@ export const getOrders = (token, handleAlert) => {
         });
     }
 }
+
+const updateOrderRequest = () => {
+    return {
+        type: ORDER_ACTION_TYPES.UPDATE_ORDER_REQUEST
+    }
+}
+const updateOrderSuccess = order => {
+    return {
+        type: ORDER_ACTION_TYPES.UPDATE_ORDER_SUCCESS,
+        payload: order
+    }
+}
+const updateOrderFail = error => {
+    return {
+        type: ORDER_ACTION_TYPES.UPDATE_ORDER_FAIL,
+        payload: error
+    }
+}
+export const updateOrder = (orderID, token, handleAlert) => {
+    return dispatch => {
+        dispatch(updateOrderRequest());
+        axios({
+            method: 'put',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/orders/${orderID}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
+            const {data, message} = response.data;
+            dispatch(updateOrderSuccess(data));
+            handleAlert('SUCCESS', message);
+        }).catch(error => {
+            dispatch(updateOrderFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
+
+
+const deleteOrderRequest = () => {
+    return {
+        type: ORDER_ACTION_TYPES.DELETE_ORDER_REQUEST
+    }
+}
+const deleteOrderSuccess = order => {
+    return {
+        type: ORDER_ACTION_TYPES.DELETE_ORDER_SUCCESS,
+        payload: order
+    }
+}
+const deleteOrderFail = error => {
+    return {
+        type: ORDER_ACTION_TYPES.DELETE_ORDER_FAIL,
+        payload: error
+    }
+}
+export const deleteOrder = (orderID, token, handleAlert) => {
+    return dispatch => {
+        dispatch(deleteOrderRequest());
+        axios({
+            method: 'delete',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/orders/${orderID}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
+            const {data, message} = response.data;
+            dispatch(deleteOrderSuccess(data));
+            handleAlert('SUCCESS', message);
+        }).catch(error => {
+            dispatch(deleteOrderFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
