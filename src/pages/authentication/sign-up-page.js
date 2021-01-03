@@ -113,13 +113,7 @@ const SignUpPage = () => {
         setUser({...user, [e.target.name]: e.target.value});
     }
 
-    const handleConfirmPasswordChange = e => {
-        setConfirmPassword(e.target.value);
-    }
 
-    const handlePasswordVisibility = () => {
-        setVisible(!visible);
-    }
 
     const handleAlert = (status, message) => {
         switch (status) {
@@ -138,6 +132,14 @@ const SignUpPage = () => {
             default:
                 break;
         }
+    }
+
+    const handleConfirmPasswordChange = e => {
+        setConfirmPassword(e.target.value);
+    }
+
+    const handlePasswordVisibility = () => {
+        setVisible(!visible);
     }
 
     const handleSignUpClicked = e => {
@@ -207,7 +209,6 @@ const SignUpPage = () => {
         }
         dispatch(signUp(user, handleAlert))
     }
-
 
     return (
         <div className={classes.root}>

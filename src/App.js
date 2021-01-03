@@ -2,7 +2,7 @@ import React from "react";
 import {Switch, Route} from "react-router-dom";
 import HomePage from "./pages/home/home-page";
 import ProductsPage from "./pages/products/products-page";
-import ProductDetailPage from "./pages/products/product-detail";
+import ProductDetailPage from "./pages/products/product-detail-page";
 import ScrollToTop from "./components/shared/scroll-to-top";
 import AboutPage from "./pages/others/about-page";
 import ContactPage from "./pages/others/contact-page";
@@ -18,6 +18,9 @@ import OrderDetailPage from "./pages/orders/order-detail-page";
 import OrdersPage from "./pages/orders/orders-page";
 import UsersPage from "./pages/users/users-page";
 import UserDetailPage from "./pages/users/user-detail-page";
+import EditUserPage from "./pages/users/edit-user-page";
+import EditProductPage from "./pages/products/edit-product-page";
+import CreateProductPage from "./pages/products/create-product-page";
 
 const App = () => {
     return (
@@ -33,6 +36,14 @@ const App = () => {
 
                 <Route exact={true} path="/products/:productID">
                     <ProductDetailPage/>
+                </Route>
+
+                <Route exact={true} path="/product/new">
+                    <CreateProductPage/>
+                </Route>
+
+                <Route exact={true} path="/products/:productID/edit">
+                    <EditProductPage/>
                 </Route>
 
                 <Route exact={true} path="/cart">
@@ -85,6 +96,10 @@ const App = () => {
 
                 <Route exact={true} path="/users/:userID">
                     <UserDetailPage/>
+                </Route>
+
+                <Route exact={true} path="/users/:userID/edit">
+                    <EditUserPage/>
                 </Route>
 
                 <Route exact={true} path="/users">

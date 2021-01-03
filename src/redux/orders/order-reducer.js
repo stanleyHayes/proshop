@@ -86,7 +86,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         case ORDER_ACTION_TYPES.GET_ORDERS_SUCCESS:
             return {
                 ...state,
-                loading: false,
+                ordersLoading: false,
                 error: null,
                 orders: action.payload
             }
@@ -111,7 +111,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 ordersLoading: false,
                 orders: [...state.orders.map(order => {
-                    if(order._id === action.payload._id){
+                    if (order._id === action.payload._id) {
                         return action.payload
                     }
                     return order;
@@ -148,6 +148,12 @@ const orderReducer = (state = INITIAL_STATE, action) => {
                 orderError: action.payload
             }
 
+        case ORDER_ACTION_TYPES.RESET_ORDER:
+            return {
+                ...state,
+                orders: [],
+                orderDetail: null
+            }
         default:
             return state;
     }

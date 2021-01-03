@@ -19,14 +19,14 @@ const getProductsFail = error => {
         payload: error
     }
 }
-export const getProducts = (handleAlert) => {
+export const getProducts = (token, handleAlert) => {
     return dispatch => {
         dispatch(getProductsRequest());
         axios({
             method: 'get',
             url: `${SERVER_BASE_URL_DEVELOPMENT}/products`,
             headers: {
-
+                Authorization: `Bearer ${token}`
             }
         }).then(response => {
             const {data, message} = response.data;
@@ -63,9 +63,7 @@ export const getProduct = (productID, handleAlert) => {
         axios({
             method: 'get',
             url: `${SERVER_BASE_URL_DEVELOPMENT}/products/${productID}`,
-            headers: {
-
-            }
+            headers: {}
         }).then(response => {
             const {data, message} = response.data;
             dispatch(getProductSuccess(data))
@@ -95,7 +93,7 @@ const updateProductFail = error => {
         payload: error
     }
 }
-export const updateProduct = (productID, token, handleAlert) => {
+export const updateProduct = (productID, product, token, handleAlert) => {
     return dispatch => {
         dispatch(updateProductRequest());
         axios({
@@ -103,7 +101,8 @@ export const updateProduct = (productID, token, handleAlert) => {
             url: `${SERVER_BASE_URL_DEVELOPMENT}/products/${productID}`,
             headers: {
                 Authorization: `Bearer ${token}`
-            }
+            },
+            data: product
         }).then(response => {
             const {data, message} = response.data;
             dispatch(updateProductSuccess(data));
@@ -171,21 +170,21 @@ const createProductFail = error => {
         payload: error
     }
 }
-export const createProduct = (product, token, handleAlert, history) => {
+export const createProduct = (product, token, handleAlert) => {
     return dispatch => {
         dispatch(createProductRequest());
         axios({
             method: 'post',
             url: `${SERVER_BASE_URL_DEVELOPMENT}/products`,
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
             },
             data: product
         }).then(response => {
             const {data, message} = response.data;
             dispatch(createProductSuccess(data));
             handleAlert('SUCCESS', message);
-            history.push(`/products/${data._id}`);
         }).catch(error => {
             dispatch(createProductFail(error.response.data.message));
             handleAlert('ERROR', error.response.data.message);

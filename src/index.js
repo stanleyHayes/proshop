@@ -16,7 +16,7 @@ const theme = createMuiTheme({
         fontFamily: "Nunito, sans-serif"
     },
     shape: {
-        borderRadius: 8
+        borderRadius: 0
     },
     palette: {
         primary: {

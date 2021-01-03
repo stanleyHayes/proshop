@@ -41,6 +41,7 @@ const HomePage = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const {products, loading, error} = useSelector(state => state.products);
+    const {token} = useSelector(state => state.products);
     const {enqueueSnackbar} = useSnackbar();
 
     useEffect(() => {
@@ -62,7 +63,7 @@ const HomePage = () => {
                     break;
             }
         }
-        dispatch(getProducts(handleAlert));
+        dispatch(getProducts(token, handleAlert));
     }, [dispatch, enqueueSnackbar]);
 
     return (

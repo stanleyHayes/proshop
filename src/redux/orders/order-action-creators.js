@@ -118,18 +118,18 @@ export const getOrdersByUser = ( token, handleAlert) => {
 
 const getOrdersRequest = () => {
     return {
-        type: ORDER_ACTION_TYPES.GET_ORDER_REQUEST
+        type: ORDER_ACTION_TYPES.GET_ORDERS_REQUEST
     }
 }
-const getOrdersSuccess = order => {
+const getOrdersSuccess = orders => {
     return {
-        type: ORDER_ACTION_TYPES.GET_ORDER_SUCCESS,
-        payload: order
+        type: ORDER_ACTION_TYPES.GET_ORDERS_SUCCESS,
+        payload: orders
     }
 }
 const getOrdersFail = error => {
     return {
-        type: ORDER_ACTION_TYPES.GET_ORDER_FAIL,
+        type: ORDER_ACTION_TYPES.GET_ORDERS_FAIL,
         payload: error
     }
 }

@@ -162,7 +162,6 @@ const SignInPage = () => {
         dispatch(signIn(user, handleAlert));
     }
 
-
     return (
         <div className={classes.root}>
             <Container>

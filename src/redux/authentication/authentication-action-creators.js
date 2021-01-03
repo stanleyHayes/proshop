@@ -6,6 +6,8 @@ import {
     PRO_SHOP_USER_INFO_KEY,
     SERVER_BASE_URL_DEVELOPMENT
 } from "../../constants/constants";
+import USER_ACTION_TYPES from "../users/user-action-types";
+import ORDER_ACTION_TYPES from "../orders/order-action-types";
 
 const signUpRequest = () => {
     return {
@@ -162,6 +164,8 @@ export const signOut = (token, handleAlert) => {
         }).then(response => {
             const {message} = response.data;
             dispatch(signOutSuccess());
+            dispatch({type: USER_ACTION_TYPES.USER_RESET});
+            dispatch({type: ORDER_ACTION_TYPES.RESET_ORDER});
             handleAlert('SUCCESS', message);
             localStorage.removeItem(PRO_SHOP_USER_INFO_KEY);
             localStorage.removeItem(PRO_SHOP_CART_ITEMS_KEY);

@@ -19,14 +19,14 @@ const getUsersFail = error => {
         payload: error
     }
 }
-export const getUsers = (handleAlert) => {
+export const getUsers = (token, handleAlert) => {
     return dispatch => {
         dispatch(getUsersRequest());
         axios({
             method: 'get',
             url: `${SERVER_BASE_URL_DEVELOPMENT}/users`,
             headers: {
-
+                Authorization: `Bearer ${token}`
             }
         }).then(response => {
             const {data, message} = response.data;
@@ -57,14 +57,14 @@ const getUserFail = error => {
         payload: error
     }
 }
-export const getUser = (userID, handleAlert) => {
+export const getUser = (userID,token, handleAlert) => {
     return dispatch => {
         dispatch(getUserRequest());
         axios({
             method: 'get',
             url: `${SERVER_BASE_URL_DEVELOPMENT}/users/${userID}`,
             headers: {
-
+                Authorization: `Bearer ${token}`
             }
         }).then(response => {
             const {data, message} = response.data;
@@ -95,7 +95,7 @@ const updateUserFail = error => {
         payload: error
     }
 }
-export const updateUser = (userID, token, handleAlert) => {
+export const updateUser = (userID, user, token, handleAlert) => {
     return dispatch => {
         dispatch(updateUserRequest());
         axios({
@@ -103,7 +103,8 @@ export const updateUser = (userID, token, handleAlert) => {
             url: `${SERVER_BASE_URL_DEVELOPMENT}/users/${userID}`,
             headers: {
                 Authorization: `Bearer ${token}`
-            }
+            },
+            data: user
         }).then(response => {
             const {data, message} = response.data;
             dispatch(updateUserSuccess(data));

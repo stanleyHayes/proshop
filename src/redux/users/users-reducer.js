@@ -125,6 +125,13 @@ const usersReducer = (state = INITIAL_STATE, action) => {
                 userLoading: false,
                 userError: action.payload
             }
+
+        case USER_ACTION_TYPES.USER_RESET:
+        return {
+            ...state,
+            users: [],
+            userDetail: null
+        }
         default:
             return state;
     }

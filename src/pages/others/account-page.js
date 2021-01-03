@@ -8,7 +8,6 @@ import {
     Grid,
     LinearProgress,
     makeStyles,
-    Paper,
     Card,
     Switch,
     Table, TableBody,
