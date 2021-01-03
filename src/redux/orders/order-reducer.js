@@ -2,9 +2,9 @@ import ORDER_ACTION_TYPES from "./order-action-types";
 
 const INITIAL_STATE = {
     orders: [],
-    error: null,
+    orderError: null,
     orderDetail: {},
-    loading: false
+    ordersLoading: false
 };
 
 const orderReducer = (state = INITIAL_STATE, action) => {
@@ -13,15 +13,15 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         case ORDER_ACTION_TYPES.CREATE_ORDER_REQUEST:
             return {
                 ...state,
-                loading: true,
-                error: null
+                ordersLoading: true,
+                orderError: null
             }
 
         case ORDER_ACTION_TYPES.CREATE_ORDER_SUCCESS:
             return {
                 ...state,
-                loading: false,
-                error: null,
+                ordersLoading: false,
+                orderError: null,
                 orders: [...state.orders, action.payload],
                 orderDetail: action.payload
             }
@@ -29,30 +29,74 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         case ORDER_ACTION_TYPES.CREATE_ORDER_FAIL:
             return {
                 ...state,
-                loading: false,
-                error: action.payload
+                ordersLoading: false,
+                orderError: action.payload
             }
 
         case ORDER_ACTION_TYPES.GET_ORDER_REQUEST:
             return {
                 ...state,
-                loading: true,
+                ordersLoading: true,
             }
 
         case ORDER_ACTION_TYPES.GET_ORDER_SUCCESS:
             return {
                 ...state,
-                loading: false,
-                error: null,
+                ordersLoading: false,
+                orderError: null,
                 orderDetail: action.payload
             }
 
         case ORDER_ACTION_TYPES.GET_ORDER_FAIL:
             return {
                 ...state,
-                loading: false,
-                error: action.payload,
+                ordersLoading: false,
+                orderError: action.payload,
                 orderDetail: null
+            }
+
+        case ORDER_ACTION_TYPES.GET_ORDERS_BY_LOGGED_IN_USER_REQUEST:
+            return {
+                ...state,
+                ordersLoading: true,
+            }
+
+        case ORDER_ACTION_TYPES.GET_ORDERS_BY_LOGGED_IN_USER_SUCCESS:
+            return {
+                ...state,
+                ordersLoading: false,
+                orderError: null,
+                orders: action.payload
+            }
+
+        case ORDER_ACTION_TYPES.GET_ORDERS_BY_LOGGED_IN_USER_FAIL:
+            return {
+                ...state,
+                ordersLoading: false,
+                orderError: action.payload,
+                orders: []
+            }
+
+        case ORDER_ACTION_TYPES.GET_ORDERS_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            }
+
+        case ORDER_ACTION_TYPES.GET_ORDERS_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                orders: action.payload
+            }
+
+        case ORDER_ACTION_TYPES.GET_ORDERS_FAIL:
+            return {
+                ...state,
+                ordersLoading: false,
+                orderError: action.payload,
+                orders: []
             }
         default:
             return state;

@@ -9,13 +9,26 @@ import {BrowserRouter} from "react-router-dom";
 import {Provider} from "react-redux";
 import {SnackbarProvider} from "notistack";
 import store from "./redux/store";
+import {grey, purple} from "@material-ui/core/colors";
 
 const theme = createMuiTheme({
     typography: {
         fontFamily: "Nunito, sans-serif"
     },
     shape: {
-        borderRadius: 0
+        borderRadius: 8
+    },
+    palette: {
+        primary: {
+            dark: purple[900],
+            main: purple[700],
+            light: purple[500]
+        },
+        secondary: {
+            dark: grey[900],
+            main: grey[700],
+            light: grey[500]
+        }
     }
 });
 

@@ -8,7 +8,7 @@ import {
     Typography,
     Card,
     Box,
-    LinearProgress
+    LinearProgress, CardContent
 } from "@material-ui/core";
 import {grey, red} from "@material-ui/core/colors";
 import {useDispatch, useSelector} from "react-redux";
@@ -90,9 +90,7 @@ const PlaceOrder = ({handlePreviousClicked}) => {
                     transition: 'all 300ms 50ms ease-in-out'
                 }
             },
-            summaryCard: {
-                backgroundColor: "#f0f2f5"
-            },
+            summaryCard: {},
             errorDivider: {
                 height: 5,
                 backgroundColor: red[900],
@@ -189,87 +187,95 @@ const PlaceOrder = ({handlePreviousClicked}) => {
 
             <Grid container={true} spacing={5}>
                 <Grid item={true} xs={12} md={8}>
-                    <Grid container={true}>
-                        <Grid item={true} xs={12}>
-                            <Typography gutterBottom={true} variant="h6"
-                                        className={classes.subtitle}>Shipping</Typography>
-                            <Typography display="inline" variant="body1"
-                                        className={classes.label}>Address: </Typography>
-                            <Typography
-                                display="inline"
-                                variant="body1">
-                                {shippingAddress.address}, {shippingAddress.city}, {shippingAddress.postalCode}, {shippingAddress.country}
-                            </Typography>
-
-                            <Divider variant="fullWidth" className={classes.divider}/>
-
-                            <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>payment
-                                method</Typography>
-
-                            <Typography display="inline" variant="body1" className={classes.label}>Method: </Typography>
-                            <Typography
-                                display="inline"
-                                variant="body1">
-                                {getDisplayPaymentMethod(paymentMethod)}
-                            </Typography>
-
-                            <Divider variant="fullWidth" className={classes.divider}/>
-
-                            <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>order
-                                items</Typography>
+                    <Card variant="outlined">
+                        <CardContent>
                             <Grid container={true}>
-                                {
-                                    items.map(item => {
-                                        return (
-                                            <Grid alignItems="center" spacing={1} key={item.product} container={true}
-                                                  item={true}>
-                                                <Grid item={true} xs={2}>
-                                                    <Avatar variant="rounded" src={item.image}
-                                                            className={classes.avatar}/>
-                                                </Grid>
-                                                <Grid item={true} xs={6}>
-                                                    <Link to={`/products/${item.product}`} className={classes.link}>
-                                                        <Typography variant="body2">{item.name}</Typography>
-                                                    </Link>
-                                                </Grid>
-                                                <Grid item={true} xs={4}>
-                                                    <Typography variant="body2" display="inline"
-                                                                className={classes.price}>{item.quantity}</Typography>
-                                                    <Typography variant="body2" display="inline"
-                                                                className={classes.price}> x </Typography>
-                                                    <Typography variant="body2" display="inline"
-                                                                className={classes.price}>${item.price}</Typography>
-                                                    <Typography variant="body2" display="inline"
-                                                                className={classes.price}> = </Typography>
-                                                    <Typography variant="body2" display="inline"
-                                                                className={classes.price}>${(item.quantity * item.price).toFixed(2)}</Typography>
-                                                </Grid>
+                                <Grid item={true} xs={12}>
+                                    <Typography gutterBottom={true} variant="h6"
+                                                className={classes.subtitle}>Shipping</Typography>
+                                    <Typography display="inline" variant="body1"
+                                                className={classes.label}>Address: </Typography>
+                                    <Typography
+                                        display="inline"
+                                        variant="body1">
+                                        {shippingAddress.address}, {shippingAddress.city}, {shippingAddress.postalCode}, {shippingAddress.country}
+                                    </Typography>
 
-                                                <Grid item={true} xs={12}>
-                                                    <Divider className={classes.summaryDivider} variant="fullWidth"/>
-                                                </Grid>
-                                            </Grid>
-                                        )
-                                    })
-                                }
-                            </Grid>
-                        </Grid>
-                        <Grid item={true}>
-                            <Grid container={true}>
+                                    <Divider variant="fullWidth" className={classes.divider}/>
+
+                                    <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>payment
+                                        method</Typography>
+
+                                    <Typography display="inline" variant="body1"
+                                                className={classes.label}>Method: </Typography>
+                                    <Typography
+                                        display="inline"
+                                        variant="body1">
+                                        {getDisplayPaymentMethod(paymentMethod)}
+                                    </Typography>
+
+                                    <Divider variant="fullWidth" className={classes.divider}/>
+
+                                    <Typography gutterBottom={true} variant="h6" className={classes.subtitle}>order
+                                        items</Typography>
+                                    <Grid container={true}>
+                                        {
+                                            items.map(item => {
+                                                return (
+                                                    <Grid alignItems="center" spacing={1} key={item.product}
+                                                          container={true}
+                                                          item={true}>
+                                                        <Grid item={true} xs={2}>
+                                                            <Avatar variant="rounded" src={item.image}
+                                                                    className={classes.avatar}/>
+                                                        </Grid>
+                                                        <Grid item={true} xs={6}>
+                                                            <Link to={`/products/${item.product}`}
+                                                                  className={classes.link}>
+                                                                <Typography variant="body2">{item.name}</Typography>
+                                                            </Link>
+                                                        </Grid>
+                                                        <Grid item={true} xs={4}>
+                                                            <Typography variant="body2" display="inline"
+                                                                        className={classes.price}>{item.quantity}</Typography>
+                                                            <Typography variant="body2" display="inline"
+                                                                        className={classes.price}> x </Typography>
+                                                            <Typography variant="body2" display="inline"
+                                                                        className={classes.price}>${item.price}</Typography>
+                                                            <Typography variant="body2" display="inline"
+                                                                        className={classes.price}> = </Typography>
+                                                            <Typography variant="body2" display="inline"
+                                                                        className={classes.price}>${(item.quantity * item.price).toFixed(2)}</Typography>
+                                                        </Grid>
+
+                                                        <Grid item={true} xs={12}>
+                                                            <Divider className={classes.summaryDivider}
+                                                                     variant="fullWidth"/>
+                                                        </Grid>
+                                                    </Grid>
+                                                )
+                                            })
+                                        }
+                                    </Grid>
+                                </Grid>
                                 <Grid item={true}>
-                                    <Button
-                                        onClick={handlePreviousClicked}
-                                        variant="contained"
-                                        disableElevation={true}
-                                        fullWidth={true}
-                                        className={classes.signUpButton}
-                                        size="large">
-                                        Back to Payment Method
-                                    </Button>
+                                    <Grid container={true}>
+                                        <Grid item={true}>
+                                            <Button
+                                                onClick={handlePreviousClicked}
+                                                variant="contained"
+                                                disableElevation={true}
+                                                fullWidth={true}
+                                                className={classes.signUpButton}
+                                                size="large">
+                                                Back to Payment Method
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                             </Grid>
-                        </Grid>
-                    </Grid>
+                        </CardContent>
+                    </Card>
                 </Grid>
                 <Grid item={true} xs={12} md={4}>
                     <Card className={classes.summaryCard} variant="outlined">

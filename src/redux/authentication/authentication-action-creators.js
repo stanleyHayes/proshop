@@ -1,6 +1,11 @@
 import AUTH_ACTION_TYPES from "./authentication-action-types";
 import axios from "axios";
-import {PRO_SHOP_TOKEN_KEY, PRO_SHOP_USER_INFO_KEY, SERVER_BASE_URL_DEVELOPMENT} from "../../constants/constants";
+import {
+    PRO_SHOP_CART_ITEMS_KEY,
+    PRO_SHOP_TOKEN_KEY,
+    PRO_SHOP_USER_INFO_KEY,
+    SERVER_BASE_URL_DEVELOPMENT
+} from "../../constants/constants";
 
 const signUpRequest = () => {
     return {
@@ -159,6 +164,7 @@ export const signOut = (token, handleAlert) => {
             dispatch(signOutSuccess());
             handleAlert('SUCCESS', message);
             localStorage.removeItem(PRO_SHOP_USER_INFO_KEY);
+            localStorage.removeItem(PRO_SHOP_CART_ITEMS_KEY);
             localStorage.removeItem(PRO_SHOP_TOKEN_KEY);
         }).catch(error => {
             dispatch(signOutFail(error.response.data.message));

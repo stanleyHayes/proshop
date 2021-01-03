@@ -17,6 +17,7 @@ import {useSnackbar} from "notistack";
 import {grey, red} from "@material-ui/core/colors";
 import {Link, useLocation, useHistory} from "react-router-dom";
 import validator from "validator";
+
 const SignInPage = () => {
 
     const useStyles = makeStyles(theme => {
@@ -72,7 +73,9 @@ const SignInPage = () => {
                 height: 5,
                 backgroundColor: theme.palette.primary.main,
                 marginBottom: 32,
-                marginTop: 32
+                marginTop: 16,
+                borderRadius: 32,
+                width: 100
             },
             noAccountLink: {
                 textDecoration: "none",
@@ -89,6 +92,9 @@ const SignInPage = () => {
                 color: red[900],
                 fontWeight: 700
             },
+            textField: {
+                borderWidth: 4
+            }
         }
     });
 
@@ -133,24 +139,24 @@ const SignInPage = () => {
     }
 
     useEffect(() => {
-        if(userProfile){
+        if (userProfile) {
             history.push(redirect);
         }
     }, [history, redirect, userProfile]);
 
     const handleSignInClicked = e => {
         e.preventDefault();
-        if(!email){
+        if (!email) {
             setError({...e, email: 'Email field required'});
-            return ;
-        }else {
+            return;
+        } else {
             setError({...e, email: null});
         }
 
-        if(!validator.isEmail(email)){
+        if (!validator.isEmail(email)) {
             setError({...e, email: 'Invalid email'});
-            return ;
-        }else {
+            return;
+        } else {
             setError({...e, email: null});
         }
         dispatch(signIn(user, handleAlert));
@@ -164,13 +170,14 @@ const SignInPage = () => {
                 <Divider className={classes.divider} variant="fullWidth"/>
                 <Grid container={true} justify="center">
                     <Grid item={true} xs={12} md={6}>
-                        <Card elevation={1}>
+                        <Card variant="outlined" elevation={0}>
                             {loading ? <LinearProgress variant="query"/> : null}
                             <CardContent>
                                 {error ? (
                                     <Box>
                                         <Divider variant="fullWidth" className={classes.errorDivider}/>
-                                        <Typography align="center" variant="body2" className={classes.error}>{error}</Typography>
+                                        <Typography align="center" variant="body2"
+                                                    className={classes.error}>{error}</Typography>
                                     </Box>
                                 ) : null}
                                 <Typography className={classes.title} variant="h2" align="center">Pro Shop</Typography>
@@ -178,8 +185,11 @@ const SignInPage = () => {
                                     Home of Quality Clothing
                                 </Typography>
 
-                                <Divider variant="middle" className={classes.headerDivider}/>
-
+                                <Grid container={true} justify="center">
+                                    <Grid item={true}>
+                                        <Divider variant="middle" className={classes.headerDivider}/>
+                                    </Grid>
+                                </Grid>
 
                                 <TextField
                                     placeholder="Enter email"

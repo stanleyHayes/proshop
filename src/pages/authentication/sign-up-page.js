@@ -73,7 +73,9 @@ const SignUpPage = () => {
                 height: 5,
                 backgroundColor: theme.palette.primary.main,
                 marginBottom: 32,
-                marginTop: 32
+                marginTop: 16,
+                borderRadius: 32,
+                width: 100
             },
             noAccountLink: {
                 textDecoration: "none",
@@ -90,6 +92,9 @@ const SignUpPage = () => {
                 color: red[900],
                 fontWeight: 700
             },
+            textField: {
+                borderWidth: 4
+            }
         }
     });
 
@@ -203,6 +208,7 @@ const SignUpPage = () => {
         dispatch(signUp(user, handleAlert))
     }
 
+
     return (
         <div className={classes.root}>
             <Container>
@@ -211,21 +217,26 @@ const SignUpPage = () => {
 
                 <Grid container={true} justify="center">
                     <Grid item={true} xs={12} md={6}>
-                        <Card elevation={0.5}>
+                        <Card variant="outlined" elevation={0}>
                             {loading ? <LinearProgress variant="query"/> : null}
                             <CardContent>
                                 {error ? (
                                     <Box>
                                         <Divider variant="fullWidth" className={classes.errorDivider}/>
-                                        <Typography variant="body2" align="center" className={classes.error}>{error}</Typography>
+                                        <Typography variant="body2" align="center"
+                                                    className={classes.error}>{error}</Typography>
                                     </Box>
                                 ) : null}
                                 <Typography className={classes.title} variant="h2" align="center">Pro Shop</Typography>
+                                <Grid container={true} justify="center">
+                                    <Grid item={true}>
+                                        <Divider variant="middle" className={classes.headerDivider}/>
+                                    </Grid>
+                                </Grid>
+
                                 <Typography className={classes.tagline} variant="body2" align="center">
                                     Home of Quality Clothing
                                 </Typography>
-
-                                <Divider variant="middle" className={classes.headerDivider}/>
 
                                 <TextField
                                     placeholder="Enter full name"

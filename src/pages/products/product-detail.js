@@ -203,7 +203,7 @@ const ProductDetailPage = () => {
                             <Typography variant="h6" className={classes.error}>{error}</Typography>
                         </Box>
                     ) : (
-                        <Card elevation={1} variant="elevation">
+                        <Card elevation={1} variant="outlined">
                             <CardContent>
                                 <Grid container={true} spacing={5}>
                                     <Grid item={true} xs={12} md={4} lg={7}>

@@ -36,7 +36,7 @@ const Product = ({product}) => {
     const classes = useStyles();
 
     return (
-        <Card variant="elevation" elevation={1}>
+        <Card variant="outlined" elevation={1}>
             <Link to={`/products/${product._id}`}>
                 <CardMedia component="img" src={product.image || '/images/notfound.jpg'}/>
             </Link>

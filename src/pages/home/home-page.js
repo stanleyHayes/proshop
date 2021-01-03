@@ -77,7 +77,7 @@ const HomePage = () => {
                     </Box>
                 ) : (
                     products.length ? (
-                        <Grid container={true} spacing={4}>
+                        <Grid container={true} spacing={2}>
                             {products.map(product => {
                                 return (
                                     <Grid key={product._id} item={true} xs={12} md={4} lg={3} xl={3}>
@@ -89,7 +89,7 @@ const HomePage = () => {
                     ) : (
                         <Grid container={true}>
                             <Grid item={true}>
-                                <Typography className={classes.notProductsText} variant="h6" align="center">No Products Available</Typography>
+                                <Typography className={classes.noProductsText} variant="h6" align="center">No Products Available</Typography>
                             </Grid>
                         </Grid>
                     )

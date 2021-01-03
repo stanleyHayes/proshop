@@ -30,8 +30,12 @@ const CartPage = () => {
                 paddingTop: 32
             },
             divider: {
-                marginTop: 16,
-                marginBottom: 16
+                marginTop: 32,
+                marginBottom: 32
+            },
+            checkoutDivider: {
+                marginTop: 12,
+                marginBottom: 12
             },
             title: {
                 textTransform: "uppercase",
@@ -53,8 +57,8 @@ const CartPage = () => {
                 textTransform: "uppercase"
             },
             productImage: {
-                width: 50,
-                height: 50
+                width: 40,
+                height: 40
             },
             deleteItemIcon: {
                 color: grey[500],
@@ -84,14 +88,17 @@ const CartPage = () => {
             },
             checkoutButton: {
                 color: "white",
-                paddingBottom: 16,
-                paddingTop: 16,
+                paddingBottom: 8,
+                paddingTop: 8,
                 fontWeight: "bold",
                 backgroundColor: theme.palette.primary.main,
                 '&:hover': {
                     backgroundColor: theme.palette.primary.dark,
                     transition: 'all 300ms 50ms ease-in-out'
                 }
+            },
+            grid: {
+                marginTop: -20
             }
         }
     });
@@ -110,7 +117,7 @@ const CartPage = () => {
 
     return (
         <Layout>
-            <Container className={classes.container}>
+            <Container className={classes.container} maxWidth="lg">
                 <Grid container={true} justify="space-between">
                     <Grid item={true}>
                         <Typography className={classes.title} variant="h4">Shopping Cart</Typography>
@@ -124,116 +131,120 @@ const CartPage = () => {
                         </Link>
                     </Grid>
                 </Grid>
-
                 <Divider variant="fullWidth" className={classes.divider}/>
+            </Container>
+
+            <Container maxWidth="xl">
                 {
                     items.length ? (
-                        <TableContainer component={Paper}>
-                            <Table stickyHeader={true}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell/>
-                                        <TableCell className={classes.tableHead} variant="head"
-                                                   align="left">Product</TableCell>
-                                        <TableCell className={classes.tableHead} variant="head"
-                                                   align="left">Price</TableCell>
-                                        <TableCell className={classes.tableHead} variant="head"
-                                                   align="left">Category</TableCell>
-                                        <TableCell className={classes.tableHead} variant="head"
-                                                   align="left">Quantity</TableCell>
-                                        <TableCell className={classes.tableHead} variant="head"
-                                                   align="left">Subtotal</TableCell>
-                                        <TableCell className={classes.tableHead} variant="head"
-                                                   align="left"/>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {
-                                        items.map((item, index) => {
-                                            return (
-                                                <TableRow key={index} hover={true}>
-                                                    <TableCell>
-                                                        <Avatar
-                                                            className={classes.productImage}
-                                                            src={item.image || '/images/notfound.jpg'}/>
-                                                    </TableCell>
-                                                    <TableCell>{item.name}</TableCell>
-                                                    <TableCell>${item.price}</TableCell>
-                                                    <TableCell>{item.category}</TableCell>
-                                                    <TableCell>
-                                                        <Select
-                                                            variant="outlined"
-                                                            value={item.quantity}
-                                                            onChange={(e) => dispatch(addToCart(item.product, Number(e.target.value)))
-                                                            }>
-                                                            {[...Array(item.countInStock).keys()].map(item => {
-                                                                return (
-                                                                    <MenuItem
-                                                                        key={item}
-                                                                        value={item + 1}>{item + 1}</MenuItem>
-                                                                )
-                                                            })}
-                                                        </Select>
-                                                    </TableCell>
-                                                    <TableCell>{item.quantity}
-                                                        <Typography
-                                                            variant="h6"
-                                                            display="inline">x</Typography> ${item.price}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Tooltip title={`Delete ${item.name}`}>
-                                                            <Delete
-                                                                onClick={() => handleRemoveFromCartClicked(item.product)}
-                                                                className={classes.deleteItemIcon}/>
-                                                        </Tooltip>
-                                                    </TableCell>
-                                                </TableRow>
-                                            )
-                                        })
-                                    }
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-
+                        <Grid container={true} spacing={5} justify="center" alignItems="flex-start">
+                            <Grid xs={12} md={7}>
+                                <Card elevation={0}>
+                                    <CardContent>
+                                        <TableContainer>
+                                            <Table stickyHeader={true} size="small">
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell/>
+                                                        <TableCell className={classes.tableHead} variant="head"
+                                                                   align="left">Product</TableCell>
+                                                        <TableCell className={classes.tableHead} variant="head"
+                                                                   align="left">Price</TableCell>
+                                                        <TableCell className={classes.tableHead} variant="head"
+                                                                   align="left">Quantity</TableCell>
+                                                        <TableCell className={classes.tableHead} variant="head"
+                                                                   align="left">Subtotal</TableCell>
+                                                        <TableCell className={classes.tableHead} variant="head"
+                                                                   align="left"/>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        items.map((item, index) => {
+                                                            return (
+                                                                <TableRow key={index} hover={true}>
+                                                                    <TableCell>
+                                                                        <Avatar
+                                                                            variant="circular"
+                                                                            className={classes.productImage}
+                                                                            src={item.image || '/images/notfound.jpg'}/>
+                                                                    </TableCell>
+                                                                    <TableCell>{item.name}</TableCell>
+                                                                    <TableCell>${item.price}</TableCell>
+                                                                    <TableCell>
+                                                                        <Select
+                                                                            variant="outlined"
+                                                                            margin="dense"
+                                                                            value={item.quantity}
+                                                                            onChange={(e) => dispatch(addToCart(item.product, Number(e.target.value)))
+                                                                            }>
+                                                                            {[...Array(item.countInStock).keys()].map(item => {
+                                                                                return (
+                                                                                    <MenuItem
+                                                                                        key={item}
+                                                                                        value={item + 1}>{item + 1}</MenuItem>
+                                                                                )
+                                                                            })}
+                                                                        </Select>
+                                                                    </TableCell>
+                                                                    <TableCell>{item.quantity}
+                                                                        <Typography
+                                                                            variant="h6"
+                                                                            display="inline">x</Typography> ${item.price}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        <Tooltip title={`Delete ${item.name}`}>
+                                                                            <Delete
+                                                                                onClick={() => handleRemoveFromCartClicked(item.product)}
+                                                                                className={classes.deleteItemIcon}/>
+                                                                        </Tooltip>
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item={true} xs={12} md={3} className={classes.grid}>
+                                <Card elevation={0}>
+                                    <CardContent>
+                                        <Typography className={classes.subTotalHeader} variant="h6">
+                                            Subtotal
+                                            ({items.reduce((accumulator, item) => accumulator + item.quantity, 0)})
+                                            Items
+                                        </Typography>
+                                        <Divider variant="fullWidth" className={classes.checkoutDivider}/>
+                                        <Typography className={classes.subTotalAmount}>
+                                            ${items.reduce((accumulator, item) => accumulator + (item.quantity * item.price), 0).toFixed(2)}
+                                        </Typography>
+                                        <Divider variant="fullWidth" className={classes.checkoutDivider}/>
+                                        <Button
+                                            onClick={handleCheckoutClicked}
+                                            variant="contained"
+                                            disableElevation={true}
+                                            fullWidth={true}
+                                            className={classes.checkoutButton}
+                                            size="large"
+                                            disabled={items.length <= 0}>
+                                            Checkout
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        </Grid>
                     ) : (
                         <Box>
                             <Divider variant="fullWidth" className={classes.noCartItemsDivider}/>
-                            <Typography className={classes.emptyCartText} variant="h6">No Items in Cart</Typography>
+                            <Typography className={classes.emptyCartText} variant="h6">
+                                No Items in Cart
+                            </Typography>
                         </Box>
                     )
                 }
-
-                <Divider variant="fullWidth" className={classes.divider}/>
-
-
-                <Grid container={true} justify="flex-end">
-                    <Grid item={true} xs={12} md={6}>
-                        <Card elevation={1}>
-                            <CardContent>
-                                <Typography className={classes.subTotalHeader} variant="h6">
-                                    Subtotal ({items.reduce((accumulator, item) => accumulator + item.quantity, 0)})
-                                    Items
-                                </Typography>
-                                <Divider variant="fullWidth" className={classes.divider}/>
-                                <Typography className={classes.subTotalAmount}>
-                                    ${items.reduce((accumulator, item) => accumulator + (item.quantity * item.price), 0).toFixed(2)}
-                                </Typography>
-                                <Divider variant="fullWidth" className={classes.divider}/>
-                                <Button
-                                    onClick={handleCheckoutClicked}
-                                    variant="contained"
-                                    disableElevation={true}
-                                    fullWidth={true}
-                                    className={classes.checkoutButton}
-                                    size="large"
-                                    disabled={items.length <= 0}>
-                                    Checkout
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
-
             </Container>
         </Layout>
     )

@@ -144,8 +144,8 @@ const OrderDetailPage = () => {
         dispatch(getOrder(orderID, token, handleAlert));
     }, [dispatch, enqueueSnackbar, history, orderID, token]);
 
-    let {loading, error, orderDetail} = useSelector(state => state.orders);
-    if(!loading){
+    let {orderError, error, orderDetail} = useSelector(state => state.orders);
+    if(!orderError){
         orderDetail.itemsPrice = orderDetail.items.reduce((accumulator, item) => (accumulator + item.price * item.quantity), 0);
     }
 
@@ -170,7 +170,7 @@ const OrderDetailPage = () => {
                 <Typography className={classes.title} variant="h4">Order Detail ({orderDetail._id})</Typography>
                 <Divider className={classes.divider} variant="fullWidth"/>
 
-                {loading ? <LinearProgress variant="query"/> : error ? (
+                {orderError ? <LinearProgress variant="query"/> : error ? (
                     <Box>
                         <Divider variant="fullWidth" className={classes.errorDivider}/>
                         <Typography variant="h6" className={classes.error}>{error}</Typography>
