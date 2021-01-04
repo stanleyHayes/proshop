@@ -33,6 +33,11 @@ const Product = ({product}) => {
             box: {
                 display: 'grid',
                 justifyContent: 'center'
+            },
+            image: {
+                height: 300,
+                objectFit: "cover",
+                objectPosition: "center"
             }
         }
     });
@@ -42,7 +47,7 @@ const Product = ({product}) => {
     return (
         <Card variant="outlined" elevation={1}>
             <Link to={`/products/${product._id}`}>
-                <CardMedia component="img" src={product.image || '/images/notfound.jpg'}/>
+                <CardMedia className={classes.image} component="img" src={product.image || '/images/notfound.jpg'}/>
             </Link>
             <CardContent>
                 <Typography align="center" display="block" variant="overline" className={classes.brand}>

@@ -11,11 +11,12 @@ import {
     TextField,
     Typography
 } from "@material-ui/core";
-import {grey} from "@material-ui/core/colors";
+import {grey, purple} from "@material-ui/core/colors";
 import {useHistory, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
-import { getProduct, updateProduct} from "../../redux/product/product-action-creators";
+import {getProduct, updateProduct} from "../../redux/product/product-action-creators";
+import ImageUploader from "react-images-upload";
 
 const EditProductPage = () => {
     const useStyles = makeStyles(theme => {
@@ -49,6 +50,7 @@ const EditProductPage = () => {
     });
     const classes = useStyles();
 
+    const [image, setImage] = useState(null);
     const {userProfile, token} = useSelector(state => state.authentication);
     const {productID} = useParams();
     const {enqueueSnackbar} = useSnackbar();
@@ -85,7 +87,7 @@ const EditProductPage = () => {
     const {productLoading, productError, productDetail} = useSelector(state => state.products);
 
     useEffect(() => {
-        if(productDetail){
+        if (productDetail) {
             setProduct({...productDetail})
         }
     }, [productDetail]);
@@ -164,22 +166,41 @@ const EditProductPage = () => {
             return;
         }
 
-        let formData = new FormData();
-        formData.append('name', name);
-        formData.append('brand', brand);
-        formData.append('price', price);
-        formData.append('category', category);
-        formData.append('description', description);
-        formData.append('countInStock', countInStock);
-        // formData.append('image', image);
-        dispatch(updateProduct(productID, {
-            name,
-            price,
-            brand,
-            category,
-            description,
-            countInStock
-        }, token, handleAlert));
+        // let formData = new FormData();
+        // formData.append('name', name);
+        // formData.append('brand', brand);
+        // formData.append('price', price);
+        // formData.append('category', category);
+        // formData.append('description', description);
+        // formData.append('countInStock', countInStock);
+        // if (image) {
+        //     formData.append('image', image);
+        // }
+
+        if(!image){
+            dispatch(updateProduct(productID, {
+                name,
+                brand,
+                price,
+                category,
+                description,
+                countInStock
+            }, token, handleAlert, history));
+        }else {
+            dispatch(updateProduct(productID, {
+                name,
+                brand,
+                price,
+                category,
+                description,
+                countInStock,
+                image
+            }, token, handleAlert, history));
+        }
+    }
+
+    const handleProductImageSelect = (files, pictures) => {
+        setImage(pictures[0]);
     }
 
     return (
@@ -201,6 +222,41 @@ const EditProductPage = () => {
                                     </Box>
                                 ) : null}
 
+                                <Grid container={true} justify="center">
+                                    <Grid item={true}>
+                                        <ImageUploader
+                                            buttonStyles={{
+                                                backgroundColor: purple[700],
+                                                color: 'white',
+                                                fontWeight: 'bold',
+                                                borderRadius: 0,
+                                                borderWidth: 2,
+                                                borderColor: purple[300],
+                                                paddingTop: 8,
+                                                paddingBottom: 8,
+                                                textTransform: "uppercase",
+                                                fontFamily: 'Nunito'
+
+
+                                            }}
+                                            fileContainerStyle={{
+                                                borderRadius: 0,
+                                                padding: 8
+                                            }}
+                                            labelClass={{fontFamily: 'Nunito'}}
+                                            buttonText="Select Product Image"
+                                            onChange={handleProductImageSelect}
+                                            singleImage={true}
+                                            name="image"
+                                            withIcon={true}
+                                            withLabel={true}
+                                            withPreview={true}
+                                            maxFileSize={5 * 1024 * 1024}
+                                            defaultImage="/images/notfound.jpg"
+                                            label="Product Image"
+                                        />
+                                    </Grid>
+                                </Grid>
                                 <TextField
                                     placeholder="Enter product name"
                                     InputLabelProps={{shrink: true}}

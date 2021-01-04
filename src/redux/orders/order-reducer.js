@@ -116,7 +116,8 @@ const orderReducer = (state = INITIAL_STATE, action) => {
                     }
                     return order;
                 })],
-                orderError: null
+                orderError: null,
+                orderDetail: action.payload
             }
 
         case ORDER_ACTION_TYPES.UPDATE_ORDER_FAIL:

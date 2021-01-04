@@ -170,7 +170,7 @@ const updateOrderFail = error => {
         payload: error
     }
 }
-export const updateOrder = (orderID, token, handleAlert) => {
+export const updateOrder = (orderID, order, token, handleAlert) => {
     return dispatch => {
         dispatch(updateOrderRequest());
         axios({
@@ -178,7 +178,8 @@ export const updateOrder = (orderID, token, handleAlert) => {
             url: `${SERVER_BASE_URL_DEVELOPMENT}/orders/${orderID}`,
             headers: {
                 Authorization: `Bearer ${token}`
-            }
+            },
+            data: order
         }).then(response => {
             const {data, message} = response.data;
             dispatch(updateOrderSuccess(data));

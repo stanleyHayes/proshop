@@ -93,7 +93,7 @@ const updateProductFail = error => {
         payload: error
     }
 }
-export const updateProduct = (productID, product, token, handleAlert) => {
+export const updateProduct = (productID, product, token, handleAlert, history) => {
     return dispatch => {
         dispatch(updateProductRequest());
         axios({
@@ -107,6 +107,7 @@ export const updateProduct = (productID, product, token, handleAlert) => {
             const {data, message} = response.data;
             dispatch(updateProductSuccess(data));
             handleAlert('SUCCESS', message);
+            history.push('/products');
         }).catch(error => {
             dispatch(updateProductFail(error.response.data.message));
             handleAlert('ERROR', error.response.data.message);
@@ -170,24 +171,24 @@ const createProductFail = error => {
         payload: error
     }
 }
-export const createProduct = (product, token, handleAlert) => {
+export const createProduct = (product, token, handleAlert, history) => {
     return dispatch => {
         dispatch(createProductRequest());
         axios({
             method: 'post',
             url: `${SERVER_BASE_URL_DEVELOPMENT}/products`,
             headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'multipart/form-data'
+                Authorization: `Bearer ${token}`
             },
             data: product
         }).then(response => {
             const {data, message} = response.data;
             dispatch(createProductSuccess(data));
             handleAlert('SUCCESS', message);
+            history.push('/products');
         }).catch(error => {
-            dispatch(createProductFail(error.response.data.message));
-            handleAlert('ERROR', error.response.data.message);
+            dispatch(createProductFail(error.message.data.message));
+            handleAlert('ERROR', error.message.data.message);
         });
     }
 }

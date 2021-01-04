@@ -4,7 +4,7 @@ const INITIAL_STATE = {
     products: [],
     error: null,
     loading: false,
-    product: {}
+    productDetail: {}
 }
 
 const productReducer = (state = INITIAL_STATE, action) => {

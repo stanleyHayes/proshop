@@ -133,6 +133,7 @@ const OrdersPage = () => {
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell className={classes.tableHead}>ID</TableCell>
+                                                <TableCell className={classes.tableHead}>User</TableCell>
                                                 <TableCell className={classes.tableHead}>Date</TableCell>
                                                 <TableCell className={classes.tableHead}>Total Price</TableCell>
                                                 <TableCell className={classes.tableHead}>Paid</TableCell>
@@ -148,18 +149,21 @@ const OrdersPage = () => {
                                                         <TableCell className={classes.tableData}>
                                                             {order._id}
                                                         </TableCell>
+                                                        <TableCell className={classes.tableData}>
+                                                            {order.user.name}
+                                                        </TableCell>
                                                         <TableCell
                                                             className={classes.tableData}>{new Date(order.createdAt).toDateString()}</TableCell>
                                                         <TableCell
                                                             className={classes.tableData}>${order.totalPrice}</TableCell>
                                                         <TableCell>
                                                             {order.isPaid ?
-                                                                <CheckCircle className={classes.checkIcon}/> :
+                                                                new Date(order.paidAt).toDateString() :
                                                                 <Cancel className={classes.cancelIcon}/>}
                                                         </TableCell>
                                                         <TableCell>
                                                             {order.isDelivered ?
-                                                                <CheckCircle className={classes.checkIcon}/> :
+                                                                new Date(order.isDelivered).toDateString() :
                                                                 <Cancel className={classes.cancelIcon}/>}
                                                         </TableCell>
                                                         <TableCell className={classes.tableData}>

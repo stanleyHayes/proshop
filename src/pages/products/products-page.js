@@ -15,7 +15,7 @@ import {grey, red} from "@material-ui/core/colors";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useHistory} from "react-router-dom";
 import {useSnackbar} from "notistack";
-import {getProducts} from "../../redux/product/product-action-creators";
+import {deleteProduct, getProducts} from "../../redux/product/product-action-creators";
 import {deleteUser} from "../../redux/users/user-action-creators";
 import ConfirmDialog from "../../components/shared/confirm-dialog";
 import {Add, Delete, Edit} from "@material-ui/icons";
@@ -70,6 +70,7 @@ const ProductsPage = () => {
                 color: "white",
                 borderWidth: 2,
                 borderColor: theme.palette.primary.light,
+                textDecoration: "none",
                 '&:hover': {
                     backgroundColor: theme.palette.primary.dark,
                     transition: 'all 500ms 150ms ease-out'
@@ -171,7 +172,7 @@ const ProductsPage = () => {
                     break;
             }
         }
-        dispatch(deleteUser(productToDelete, token, handleAlert));
+        dispatch(deleteProduct(productToDelete, token, handleAlert));
         setOpenDialog(false);
     }
 

@@ -11,11 +11,12 @@ import {
     TextField,
     Typography
 } from "@material-ui/core";
-import {grey} from "@material-ui/core/colors";
+import {grey, purple} from "@material-ui/core/colors";
 import {useHistory} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
 import {createProduct} from "../../redux/product/product-action-creators";
+import ImageUploader from "react-images-upload";
 
 const CreateProductPage = () => {
     const useStyles = makeStyles(theme => {
@@ -49,10 +50,11 @@ const CreateProductPage = () => {
     });
     const classes = useStyles();
 
-    const {productLoading, productError} = useSelector(state => state.products);
+    const {loading, error} = useSelector(state => state.products);
     const {userProfile, token} = useSelector(state => state.authentication);
     const [product, setProduct] = useState({});
     const [e, setError] = useState({});
+    const [image, setImage] = useState(null);
     const {name, brand, category, description, price, countInStock} = product;
     const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
@@ -89,6 +91,10 @@ const CreateProductPage = () => {
         }
     }
 
+    const handleProductImageSelect = (files, pictures) => {
+        setImage(pictures[0]);
+    }
+
     const handleCreateProductClicked = e => {
         e.preventDefault();
 
@@ -118,54 +124,86 @@ const CreateProductPage = () => {
             setError({...e, brand: 'Brand field required'});
             handleAlert('ERROR', 'Brand field required');
         } else {
-            setError({...e, password: null});
+            setError({...e, brand: null});
         }
 
         if (!description) {
             setError({...e, description: 'Description Password field required'});
             handleAlert('ERROR', 'Description password field required');
         } else {
-            setError({...e, confirmPassword: null});
+            setError({...e, description: null});
         }
 
-        if (countInStock) {
+        if (!countInStock) {
             setError({...e, countInStock: 'Count in stock required'});
             handleAlert('ERROR', 'Count in stock required');
         } else {
             setError({...e, password: null, confirmPassword: null});
         }
-        if (e.name || e.brand || e.category || e.description || e.countInStock || e.price) {
+        if (e.name || e.brand || e.category || e.description || e.countInStock || e.price || !image) {
             return;
         }
-        let formData = new FormData();
-        formData.append('name', name);
-        formData.append('brand', brand);
-        formData.append('price', price);
-        formData.append('category', category);
-        formData.append('description', description);
-        formData.append('countInStock', countInStock);
-        // formData.append('image', image);
-        dispatch(createProduct(formData, token, handleAlert));
+
+        dispatch(createProduct({name, brand, price, category, description, countInStock, image}, token, handleAlert));
     }
+
+
+
 
     return (
         <Layout>
             <Container className={classes.container}>
-                {productLoading ? <LinearProgress variant="query"/> : null}
+                {loading ? <LinearProgress variant="query"/> : null}
                 <Typography className={classes.title} variant="h4">New Product</Typography>
                 <Divider className={classes.divider} variant="fullWidth"/>
                 <Grid container={true} justify="center">
-                    <Grid item={true} xs={12} md={6} lg={5} >
+                    <Grid item={true} xs={12} md={6} lg={5}>
                         <Card variant="outlined" elevation={0}>
-                            {productLoading ? <LinearProgress variant="query"/> : null}
+                            {loading ? <LinearProgress variant="query"/> : null}
                             <CardContent>
-                                {productError ? (
+                                {error ? (
                                     <Box>
                                         <Divider variant="fullWidth" className={classes.errorDivider}/>
                                         <Typography variant="body2" align="center"
-                                                    className={classes.error}>{productError}</Typography>
+                                                    className={classes.error}>{error}</Typography>
                                     </Box>
                                 ) : null}
+
+                                <Grid container={true} justify="center">
+                                    <Grid item={true}>
+                                        <ImageUploader
+                                            buttonStyles={{
+                                                backgroundColor: purple[700],
+                                                color: 'white',
+                                                fontWeight: 'bold',
+                                                borderRadius: 0,
+                                                borderWidth: 2,
+                                                borderColor: purple[300],
+                                                paddingTop: 8,
+                                                paddingBottom: 8,
+                                                textTransform: "uppercase",
+                                                fontFamily: 'Nunito'
+
+
+                                            }}
+                                            fileContainerStyle={{
+                                                borderRadius: 0,
+                                                padding: 8
+                                            }}
+                                            labelClass={{fontFamily: 'Nunito'}}
+                                            buttonText="Select Product Image"
+                                            onChange={handleProductImageSelect}
+                                            singleImage={true}
+                                            name="image"
+                                            withIcon={true}
+                                            withLabel={true}
+                                            withPreview={true}
+                                            maxFileSize={5 * 1024 * 1024}
+                                            defaultImage="/images/notfound.jpg"
+                                            label="Product Image"
+                                        />
+                                    </Grid>
+                                </Grid>
 
                                 <TextField
                                     placeholder="Enter product name"
@@ -272,7 +310,7 @@ const CreateProductPage = () => {
                                     fullWidth={true}
                                     className={classes.createProductButton}
                                     size="large"
-                                    disabled={productLoading}>
+                                    disabled={loading}>
                                     Create Product
                                 </Button>
                             </CardContent>
