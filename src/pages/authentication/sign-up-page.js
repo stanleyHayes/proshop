@@ -93,7 +93,7 @@ const SignUpPage = () => {
                 fontWeight: 700
             },
             textField: {
-                borderWidth: 4
+                backgroundColor: "#f0f2f5"
             }
         }
     });

@@ -121,10 +121,10 @@ const deleteProductRequest = () => {
         type: PRODUCT_TYPES.DELETE_PRODUCT_REQUEST
     }
 }
-const deleteProductSuccess = order => {
+const deleteProductSuccess = product => {
     return {
         type: PRODUCT_TYPES.DELETE_PRODUCT_SUCCESS,
-        payload: order
+        payload: product
     }
 }
 const deleteProductFail = error => {
@@ -171,6 +171,7 @@ const createProductFail = error => {
         payload: error
     }
 }
+
 export const createProduct = (product, token, handleAlert, history) => {
     return dispatch => {
         dispatch(createProductRequest());
@@ -187,8 +188,126 @@ export const createProduct = (product, token, handleAlert, history) => {
             handleAlert('SUCCESS', message);
             history.push('/products');
         }).catch(error => {
-            dispatch(createProductFail(error.message.data.message));
-            handleAlert('ERROR', error.message.data.message);
+            dispatch(createProductFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
+
+
+
+const updateReviewRequest = () => {
+    return {
+        type: PRODUCT_TYPES.UPDATE_REVIEW_REQUEST
+    }
+}
+const updateReviewSuccess = review => {
+    return {
+        type: PRODUCT_TYPES.UPDATE_REVIEW_SUCCESS,
+        payload: review
+    }
+}
+
+const updateReviewFail = error => {
+    return {
+        type: PRODUCT_TYPES.UPDATE_REVIEW_FAIL,
+        payload: error
+    }
+}
+export const updateReview = (reviewID, review, token, handleAlert) => {
+    return dispatch => {
+        dispatch(updateReviewRequest());
+        axios({
+            method: 'put',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/reviews/${reviewID}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: review
+        }).then(response => {
+            const {data, message} = response.data;
+            dispatch(updateReviewSuccess(data));
+            handleAlert('SUCCESS', message);
+        }).catch(error => {
+            dispatch(updateReviewFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
+
+const deleteReviewRequest = () => {
+    return {
+        type: PRODUCT_TYPES.DELETE_REVIEW_REQUEST
+    }
+}
+const deleteReviewSuccess = review => {
+    return {
+        type: PRODUCT_TYPES.DELETE_REVIEW_SUCCESS,
+        payload: review
+    }
+}
+const deleteReviewFail = error => {
+    return {
+        type: PRODUCT_TYPES.DELETE_REVIEW_FAIL,
+        payload: error
+    }
+}
+export const deleteReview = (reviewID, token, handleAlert) => {
+    return dispatch => {
+        dispatch(deleteReviewRequest());
+        axios({
+            method: 'delete',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/reviews/${reviewID}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
+            const {data, message} = response.data;
+            dispatch(deleteReviewSuccess(data));
+            handleAlert('SUCCESS', message);
+        }).catch(error => {
+            dispatch(deleteReviewFail(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
+        });
+    }
+}
+
+
+const createReviewRequest = () => {
+    return {
+        type: PRODUCT_TYPES.CREATE_REVIEW_REQUEST
+    }
+}
+const createReviewSuccess = review => {
+    return {
+        type: PRODUCT_TYPES.CREATE_REVIEW_SUCCESS,
+        payload: review
+    }
+}
+const createReviewFailure = error => {
+    return {
+        type: PRODUCT_TYPES.CREATE_REVIEW_FAIL,
+        payload: error
+    }
+}
+export const createReview = (review, token, handleAlert) => {
+    return dispatch => {
+        dispatch(createReviewRequest());
+        axios({
+            method: 'post',
+            url: `${SERVER_BASE_URL_DEVELOPMENT}/reviews`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data: review
+        }).then(response => {
+            const {data, message} = response.data;
+            console.log(data, message);
+            dispatch(createReviewSuccess(data));
+            handleAlert('SUCCESS', message);
+        }).catch(error => {
+            dispatch(createReviewFailure(error.response.data.message));
+            handleAlert('ERROR', error.response.data.message);
         });
     }
 }

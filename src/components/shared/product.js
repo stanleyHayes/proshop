@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Card, CardContent, CardMedia, Divider, makeStyles, Typography} from "@material-ui/core";
+import {Box, Card, CardContent, CardMedia, makeStyles, Typography} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import {Rating} from "@material-ui/lab";
 import {green, grey} from "@material-ui/core/colors";
@@ -8,7 +8,9 @@ const Product = ({product}) => {
 
     const useStyles = makeStyles(theme => {
         return {
-            card: {},
+            card: {
+                height: 500
+            },
             name: {},
             link: {
                 textDecoration: "none",
@@ -38,14 +40,15 @@ const Product = ({product}) => {
                 height: 300,
                 objectFit: "cover",
                 objectPosition: "center"
-            }
+            },
+
         }
     });
 
     const classes = useStyles();
 
     return (
-        <Card variant="outlined" elevation={1}>
+        <Card className={classes.card} variant="outlined" elevation={1}>
             <Link to={`/products/${product._id}`}>
                 <CardMedia className={classes.image} component="img" src={product.image || '/images/notfound.jpg'}/>
             </Link>

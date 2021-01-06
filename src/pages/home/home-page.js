@@ -64,7 +64,7 @@ const HomePage = () => {
             }
         }
         dispatch(getProducts(token, handleAlert));
-    }, [dispatch, enqueueSnackbar]);
+    }, [dispatch, enqueueSnackbar, token]);
 
     return (
         <Layout>

@@ -8,7 +8,7 @@ import {
     MenuItem,
     Paper,
     LinearProgress,
-    Divider
+    Divider, Typography
 } from "@material-ui/core";
 import {Link} from "react-router-dom";
 import React, {useState} from "react";
@@ -39,7 +39,17 @@ const DesktopHeader = () => {
             brand: {
                 fontWeight: 700,
                 fontSize: 32,
-                textTransform: "uppercase"
+                textTransform: "uppercase",
+                borderWidth: 2,
+                borderColor: theme.palette.primary.light,
+                textDecoration: "none",
+                color: theme.palette.primary.main,
+                backgroundColor: "white",
+                borderStyle: "solid",
+                paddingTop: 4,
+                paddingBottom: 4,
+                paddingRight: 8,
+                paddingLeft: 8
             },
             linkButton: {
                 color: "white",
@@ -68,6 +78,21 @@ const DesktopHeader = () => {
             dropdownDivider: {
                 marginTop: 0,
                 marginBottom: 0
+            },
+            searchButton: {
+                borderWidth: 2,
+                borderColor: "white",
+                color: "white",
+                paddingLeft:16,
+                paddingRight: 16,
+                fontWeight: "bold",
+                '&:hover': {
+                    backgroundColor: theme.palette.primary.dark,
+                    transition: "all 500ms 150ms ease-in-out"
+                }
+            },
+            searchIcon: {
+                color: "white"
             }
         }
     });
@@ -128,22 +153,17 @@ const DesktopHeader = () => {
 
     return (
         <Toolbar className={classes.toolbar} variant="regular">
-            <Container>
-                <Grid container={true} justify="space-around">
-                    <Grid item={true} lg={2}>
-                        <Link className={`${classes.link} ${classes.brand}`} to="/">
-                            Pro Shop
-                        </Link>
-                    </Grid>
-                    <Grid item={true} lg={5} container={true} justify="flex-end">
+            <Container maxWidth="xl">
+                <Grid alignItems="center" container={true} spacing={5}>
+                    <Grid item={true} lg={5} container={true} alignItems="center" justify="flex-end">
                         <Grid item={true}>
                             <Link className={classes.link} to="/">
                                 <Button className={classes.linkButton} variant="text" size="medium">Home</Button>
                             </Link>
                         </Grid>
                         <Grid item={true}>
-                            <Link className={classes.link} to="/products">
-                                <Button className={classes.linkButton} variant="text" size="medium">Products</Button>
+                            <Link className={classes.link} to="/blog">
+                                <Button className={classes.linkButton} variant="text" size="medium">Blog</Button>
                             </Link>
                         </Grid>
                         <Grid item={true}>
@@ -156,8 +176,15 @@ const DesktopHeader = () => {
                                 <Button className={classes.linkButton} variant="text" size="medium">About Us</Button>
                             </Link>
                         </Grid>
+                    </Grid >
+                    <Grid item={true} >
+                        <Link className={`${classes.link}`} to="/">
+                            <Typography className={classes.brand} variant="h3">
+                                Pro Shop
+                            </Typography>
+                        </Link>
                     </Grid>
-                    <Grid item={true} lg={5} container={true} justify="flex-end" alignItems="center">
+                    <Grid item={true} lg={5} container={true} justify="flex-start" alignItems="center">
                         <Grid item={true}>
                             <Link className={classes.link} to="/cart">
                                 <Button
@@ -272,6 +299,16 @@ const DesktopHeader = () => {
                                 </Grid>
                             )
                         }
+                        <Grid item={true}>
+                            <Link className={classes.link} to={`/search`}>
+                                <Button
+                                    className={classes.searchButton}
+                                    variant="outlined"
+                                    size="large">
+                                    Search
+                                </Button>
+                            </Link>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Container>

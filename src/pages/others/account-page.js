@@ -92,6 +92,9 @@ const AccountPage = () => {
             },
             link: {
                 textDecoration: "none"
+            },
+            textField: {
+                backgroundColor: "#f0f2f5"
             }
         }
     });

@@ -46,6 +46,9 @@ const CreateProductPage = () => {
                     transition: 'all 500ms 150ms ease-out'
                 }
             },
+            textField: {
+                backgroundColor: "#f0f2f5"
+            }
         }
     });
     const classes = useStyles();
