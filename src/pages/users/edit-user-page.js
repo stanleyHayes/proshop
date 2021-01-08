@@ -11,7 +11,7 @@ import {
     makeStyles,
     TextField,
     Typography,
-    Checkbox, Switch
+    Checkbox
 } from "@material-ui/core";
 import {grey, red} from "@material-ui/core/colors";
 import {useParams, useHistory} from "react-router-dom";
@@ -19,7 +19,6 @@ import {getUser, updateUser} from "../../redux/users/user-action-creators";
 import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
 import validator from "validator";
-import {updateProfile} from "../../redux/authentication/authentication-action-creators";
 
 const EditUserPage = () => {
     const useStyles = makeStyles(theme => {

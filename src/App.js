@@ -21,6 +21,7 @@ import UserDetailPage from "./pages/users/user-detail-page";
 import EditUserPage from "./pages/users/edit-user-page";
 import EditProductPage from "./pages/products/edit-product-page";
 import CreateProductPage from "./pages/products/create-product-page";
+import SearchPage from "./pages/products/search-page";
 
 const App = () => {
     return (
@@ -104,6 +105,10 @@ const App = () => {
 
                 <Route exact={true} path="/users">
                     <UsersPage/>
+                </Route>
+
+                <Route exact={true} path="/search">
+                    <SearchPage/>
                 </Route>
             </ScrollToTop>
         </Switch>

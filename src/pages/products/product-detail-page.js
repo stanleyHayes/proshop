@@ -19,13 +19,15 @@ import Image from "material-ui-image";
 import {Rating} from "@material-ui/lab";
 import {AddShoppingCart} from "@material-ui/icons";
 import {useSelector, useDispatch} from "react-redux";
-import {createReview, getProduct} from "../../redux/product/product-action-creators";
+import {getProduct} from "../../redux/product/product-action-creators";
 import {useSnackbar} from "notistack";
 import {green, grey, red} from "@material-ui/core/colors";
 import AddToCartDialog from "../../components/shared/add-to-cart-dialog";
 import {useHistory} from "react-router-dom";
 import {addToCart} from "../../redux/cart/cart-action-creators";
 import Review from "../../components/shared/review";
+import {createReview, getReviewsByProduct} from "../../redux/reviews/reviews-action-creators";
+import Meta from "../../components/shared/meta";
 
 const ProductDetailPage = () => {
     const useStyles = makeStyles(theme => {
@@ -151,7 +153,7 @@ const ProductDetailPage = () => {
     const {enqueueSnackbar} = useSnackbar();
     const [review, setReview] = useState({rating: 5});
     const {userProfile, token} = useSelector(state => state.authentication);
-    const {error, productDetail, loading} = useSelector(state => state.products);
+
     const [e, setError] = useState({});
     const {comment, rating} = review;
     const handleReviewChange = e => {
@@ -206,9 +208,12 @@ const ProductDetailPage = () => {
                     break;
             }
         }
-        dispatch(getProduct(productID, handleAlert))
-    }, [dispatch, enqueueSnackbar, productID]);
+        dispatch(getProduct(productID, handleAlert));
+        dispatch(getReviewsByProduct(productID, token, handleAlert));
+    }, [dispatch, enqueueSnackbar, productID, token]);
 
+    const {error, productDetail, loading} = useSelector(state => state.products);
+    const {errorReview, loadingReview, reviews} = useSelector(state => state.reviews);
 
     const handleAddToCart = () => {
         setOpen(true);
@@ -266,6 +271,8 @@ const ProductDetailPage = () => {
                         </Box>
                     ) : (
                         <Box>
+                            <Meta title={`${productDetail && productDetail.name}`}
+                                  description={`${productDetail && productDetail.description}`}/>
                             <Card elevation={1} variant="outlined">
                                 <CardContent>
                                     <Grid container={true} spacing={5}>
@@ -389,48 +396,58 @@ const ProductDetailPage = () => {
                                                 Reviews
                                             </Typography>
                                             <Divider variant="fullWidth" className={classes.divider}/>
-                                            {
-                                                (userProfile ? (
-                                                    <Box>
-                                                        {
-                                                            productDetail && productDetail.reviews && productDetail.reviews.length ? (
-                                                                productDetail.reviews.map(review => {
-                                                                    return <Review key={review._id} review={review}/>
-                                                                })
-                                                            ) : (
-                                                                <Alert variant="filled" color="info"
-                                                                       className={classes.noReviewAlert}>
-                                                                    <AlertTitle className={classes.noReviewTitle}>No
-                                                                        Reviews</AlertTitle>
-                                                                    <Typography className={classes.noReviewText}
-                                                                                variant="body2">Be the
-                                                                        first to review
-                                                                        {productDetail && productDetail.name}</Typography>
-                                                                </Alert>
-                                                            )
-                                                        }
-                                                    </Box>
-
-                                                ) : (
-                                                    <Alert>
-                                                        <AlertTitle>Not signed in</AlertTitle>
-                                                        <Typography variant="body2">Log in in to review
-                                                            ${productDetail && productDetail.name}</Typography>
+                                            <Box>
+                                                {loadingReview && <LinearProgress variant="indeterminate"/>}
+                                                {errorReview ? (
+                                                    <Alert variant="filled" color="error"
+                                                           className={classes.noReviewAlert}>
+                                                        <AlertTitle
+                                                            className={classes.noReviewTitle}>Error</AlertTitle>
+                                                        <Typography
+                                                            className={classes.noReviewText}
+                                                            variant="body2">
+                                                            {errorReview}
+                                                        </Typography>
                                                     </Alert>
-                                                ))
-                                            }
+                                                ) : null}
+                                            </Box>
+                                            {
+                                                reviews && reviews.length ? (
+                                                    reviews.map(review => {
+                                                        return <Review key={review._id} review={review}/>
+                                                    })
+                                                ) : (
+                                                    <Alert variant="filled" color="info"
+                                                           className={classes.noReviewAlert}>
+                                                        <AlertTitle className={classes.noReviewTitle}>
+                                                            No Reviews
+                                                        </AlertTitle>
+                                                        {userProfile ? (
+                                                            <Typography
+                                                                className={classes.noReviewText} variant="body2">
+                                                                Be the first to
+                                                                review{productDetail && productDetail.name}
+                                                            </Typography>
+                                                        ) : (
+                                                            <Typography
+                                                                className={classes.noReviewText} variant="body2">
+                                                                Login to review {productDetail && productDetail.name}
+                                                            </Typography>
+                                                        )}
 
+                                                    </Alert>
+                                                )
+                                            }
                                         </Grid>
                                         <Grid item={true} xs={12} md={6}>
+                                            <Typography variant="h6" className={classes.subTitle}>
+                                                Write a customer review
+                                            </Typography>
+
+                                            <Divider variant="fullWidth" className={classes.divider}/>
                                             {
                                                 (userProfile ? (
                                                     <Box>
-                                                        <Typography variant="h6" className={classes.subTitle}>
-                                                            Write a customer review
-                                                        </Typography>
-
-                                                        <Divider variant="fullWidth" className={classes.divider}/>
-
                                                         <Select
                                                             name="rating"
                                                             fullWidth={true}
@@ -468,7 +485,7 @@ const ProductDetailPage = () => {
                                                             size="large"
                                                             onClick={handleReviewSubmit}
                                                             className={classes.reviewButton}
-                                                            disabled={loading}>
+                                                            disabled={loadingReview}>
                                                             Review
                                                         </Button>
                                                     </Box>

@@ -4,7 +4,10 @@ const INITIAL_STATE = {
     products: [],
     error: null,
     loading: false,
-    productDetail: {}
+    productDetail: {},
+    page: 0,
+    count: 10,
+    topRatedProducts: []
 }
 
 const productReducer = (state = INITIAL_STATE, action) => {
@@ -18,8 +21,10 @@ const productReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 loading: false,
-                products: action.payload,
-                error: null
+                products: action.payload.products,
+                error: null,
+                count: action.payload.count,
+                page: action.payload.page
             }
 
         case PRODUCT_ACTION_TYPES.GET_PRODUCTS_FAIL:
@@ -27,6 +32,28 @@ const productReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 products: [],
+                error: action.payload
+            }
+
+
+        case PRODUCT_ACTION_TYPES.GET_TOP_RATED_PRODUCTS_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+        case PRODUCT_ACTION_TYPES.GET_TOP_RATED_PRODUCTS_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                topRatedProducts: action.payload.products,
+                error: null
+            }
+
+        case PRODUCT_ACTION_TYPES.GET_TOP_RATED_PRODUCTS_FAIL:
+            return {
+                ...state,
+                loading: false,
+                topRatedProducts: [],
                 error: action.payload
             }
 
@@ -122,85 +149,6 @@ const productReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 loading: false,
                 error: action.payload
-            }
-
-        case PRODUCT_ACTION_TYPES.CREATE_REVIEW_REQUEST:
-            return {
-                error: null,
-                loading: true
-            }
-
-        case PRODUCT_ACTION_TYPES.CREATE_REVIEW_SUCCESS:
-            console.log(action.payload, 'review');
-            return {
-                ...state,
-                products: [...state.products.map(product => {
-                    if (product._id === action.payload.product) {
-                        product.reviews.push(action.payload);
-                        return product;
-                    }
-                    return product;
-                })]
-            }
-
-        case PRODUCT_ACTION_TYPES.CREATE_REVIEW_FAIL:
-            return {
-                error: action.payload,
-                loading: false
-            }
-
-
-        case PRODUCT_ACTION_TYPES.UPDATE_REVIEW_REQUEST:
-            return {
-                error: null,
-                loading: true
-            }
-
-        case PRODUCT_ACTION_TYPES.UPDATE_REVIEW_SUCCESS:
-            return {
-                ...state,
-                products: [...state.products.map(product => {
-                    if (product._id === action.payload.product) {
-                        product.reviews = product.reviews.filter(review => {
-                            if (review._id === action.payload._id) {
-                                return action.payload;
-                            }
-                            return review;
-                        });
-                        return product;
-                    }
-                    return product;
-                })]
-            }
-
-        case PRODUCT_ACTION_TYPES.UPDATE_REVIEW_FAIL:
-            return {
-                error: action.payload,
-                loading: false
-            }
-
-        case PRODUCT_ACTION_TYPES.DELETE_REVIEW_REQUEST:
-            return {
-                error: null,
-                loading: true
-            }
-
-        case PRODUCT_ACTION_TYPES.DELETE_REVIEW_SUCCESS:
-            return {
-                ...state,
-                products: [...state.products.map(product => {
-                    if (product._id === action.payload.product) {
-                        product.reviews = product.reviews.filter(review => review._id !== action.payload._id);
-                        return product;
-                    }
-                    return product;
-                })]
-            }
-
-        case PRODUCT_ACTION_TYPES.DELETE_REVIEW_FAIL:
-            return {
-                error: action.payload,
-                loading: false
             }
         default:
             return state;

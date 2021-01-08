@@ -49,7 +49,13 @@ const DesktopHeader = () => {
                 paddingTop: 4,
                 paddingBottom: 4,
                 paddingRight: 8,
-                paddingLeft: 8
+                paddingLeft: 8,
+                '&:hover':{
+                    color: "white",
+                    borderColor: theme.palette.primary.light,
+                    backgroundColor: theme.palette.primary.dark,
+                    transition: "all 500ms 150ms ease-in-out"
+                }
             },
             linkButton: {
                 color: "white",
@@ -73,7 +79,8 @@ const DesktopHeader = () => {
             },
             profileLink: {
                 textDecoration: "none",
-                color: grey[900]
+                color: "white",
+                fontWeight: "bold"
             },
             dropdownDivider: {
                 marginTop: 0,
@@ -290,11 +297,11 @@ const DesktopHeader = () => {
                                 </Grid>
                             ) : (
                                 <Grid item={true}>
-                                    <Link className={classes.link} to="/login">
+                                    <Link className={classes.profileLink} to="/login">
                                         <Button
-                                            className={classes.dropdownLinkButton}
+                                            className={classes.profileLink}
                                             variant="text"
-                                            size="medium">Sign In</Button>
+                                            size="large">Sign In</Button>
                                     </Link>
                                 </Grid>
                             )

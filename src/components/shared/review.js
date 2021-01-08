@@ -6,7 +6,9 @@ const Review = ({review}) => {
 
     const useStyles = makeStyles(theme => {
         return {
-
+            card: {
+                marginBottom: 4
+            }
         }
     });
 

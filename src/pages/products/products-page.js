@@ -9,14 +9,13 @@ import {
     Box,
     Card,
     TableContainer,
-    CardContent, Table, TableHead, TableRow, TableCell, TableBody, Button, Avatar, Grid,
+    CardContent, Table, TableHead, TableRow, TableCell, TableBody, Button, Avatar, Grid, TableFooter, TablePagination,
 } from "@material-ui/core";
 import {grey, red} from "@material-ui/core/colors";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useHistory} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {deleteProduct, getProducts} from "../../redux/product/product-action-creators";
-import {deleteUser} from "../../redux/users/user-action-creators";
 import ConfirmDialog from "../../components/shared/confirm-dialog";
 import {Add, Delete, Edit} from "@material-ui/icons";
 
@@ -117,7 +116,7 @@ const ProductsPage = () => {
     const {token, userProfile} = useSelector(state => state.authentication);
     const [productToDelete, setProductToDelete] = useState("");
     const [openDialog, setOpenDialog] = useState(false);
-
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         const handleAlert = (status, message) => {
@@ -139,13 +138,13 @@ const ProductsPage = () => {
             }
         }
         if (userProfile && userProfile.isAdmin) {
-            dispatch(getProducts(token, handleAlert));
+            dispatch(getProducts(null, page, handleAlert));
         } else {
             history.push('/login')
         }
-    }, [dispatch, enqueueSnackbar, history, token, userProfile]);
+    }, [dispatch, enqueueSnackbar, history, page, token, userProfile]);
 
-    const {products, productError, productLoading} = useSelector(state => state.products);
+    const {products, productError, productLoading, count} = useSelector(state => state.products);
 
 
     const handleDeleteProductClick = productID => {
@@ -178,6 +177,10 @@ const ProductsPage = () => {
 
     const handleCancelProductDelete = () => {
         setOpenDialog(false);
+    }
+
+    const handlePageChange = (event, page) => {
+        setPage(page);
     }
 
     return (
@@ -293,6 +296,21 @@ const ProductsPage = () => {
                                                         )
                                                     })}
                                                 </TableBody>
+                                                <TableFooter>
+                                                    <TablePagination
+                                                        count={Math.round(count / 8)}
+                                                        defaultValue={1}
+                                                        page={page}
+                                                        size="medium"
+                                                        color="primary"
+                                                        onChangePage={handlePageChange}
+                                                        variant="footer"
+                                                        valign="middle"
+                                                        rowsPerPage={8}
+                                                        sortDirection="desc"
+                                                        rowsPerPageOptions={[8, 16, 24, 32]}
+                                                    />
+                                                </TableFooter>
                                             </Table>
                                         </TableContainer>
                                     </CardContent>

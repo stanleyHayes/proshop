@@ -19,7 +19,7 @@ import {
 } from "@material-ui/core";
 import {green, grey, red} from "@material-ui/core/colors";
 import {useDispatch, useSelector} from "react-redux";
-import {Cancel, CheckCircle} from "@material-ui/icons";
+import {Cancel} from "@material-ui/icons";
 import {Link, useHistory} from "react-router-dom";
 import {useSnackbar} from "notistack";
 import {getOrders} from "../../redux/orders/order-action-creators";
